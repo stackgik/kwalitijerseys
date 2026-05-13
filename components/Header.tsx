@@ -4,23 +4,32 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Shirt, ShoppingCart } from "lucide-react";
-
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/shop", label: "Shop" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-  { href: "/cart", label: <ShoppingCart size={20} /> },
-];
+import { useCart } from "@/context/CartContext";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { itemCount } = useCart();
 
-  // Close mobile menu on route change
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [pathname]);
+  const navLinks = [
+    { href: "/", label: "Home" },
+    { href: "/shop", label: "Shop" },
+    { href: "/about", label: "About" },
+    { href: "/contact", label: "Contact" },
+    {
+      href: "/checkout",
+      label: (
+        <div>
+          <ShoppingCart size={20} />
+          {itemCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-black text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
+              {itemCount}
+            </span>
+          )}
+        </div>
+      ),
+    },
+  ];
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -39,7 +48,7 @@ export function Header() {
             >
               <Shirt className="w-5 h-5 text-black transition-transform duration-200 group-hover:scale-110" />
               <span className="text-lg font-bold tracking-tight text-black">
-                KwalitiJersey
+                steezesportswear
               </span>
             </Link>
 
