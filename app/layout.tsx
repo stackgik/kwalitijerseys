@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
+import { CartProvider } from "@/context/CartContext";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -37,10 +38,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="overflow-y-scroll">
       <body className={`${nunito.className} font-sans antialiased`}>
-        <Header />
-        <main>{children}</main>
-        <Footer />
-        <Toaster />
+        <CartProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+          <Toaster />
+        </CartProvider>
       </body>
     </html>
   );
