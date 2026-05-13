@@ -1,6 +1,6 @@
 "use client";
 
-import { ShoppingBag, MessageCircle, Mail } from "lucide-react";
+import { MessageCircle, Mail, Shirt } from "lucide-react";
 import Link from "next/link";
 
 export function Footer() {
@@ -10,19 +10,25 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div>
-            <Link href="/" className="flex items-center space-x-2 mb-4">
-              <ShoppingBag className="w-6 h-6" />
-              <span className="text-lg font-bold">KwalitiJersey</span>
+            {/* Logo */}
+            <Link
+              href="/"
+              className="flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black rounded-md mb-4"
+            >
+              <Shirt className="w-5 h-5 text-gray-400 transition-transform duration-200 group-hover:scale-110" />
+              <span className="text-lg font-bold tracking-tight text-gray-100">
+                kwalitijerseys
+              </span>
             </Link>
             <p className="text-gray-400 text-sm">
-              Nigeria's trusted source for authentic football jerseys. Quality
-              guaranteed.
+              Nigeria&apos;s trusted source for authentic football jerseys.
+              Quality guaranteed.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-sm font-semibold mb-4">Quick Links</h3>
+            <h3 className="text-sm font-bold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
                 <Link
@@ -53,7 +59,7 @@ export function Footer() {
 
           {/* Categories */}
           <div>
-            <h3 className="text-sm font-semibold mb-4">Popular Leagues</h3>
+            <h3 className="text-sm font-bold mb-4">Popular Leagues</h3>
             <ul className="space-y-2">
               <li>
                 <Link
@@ -92,7 +98,7 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="text-sm font-semibold mb-4">Get In Touch</h3>
+            <h3 className="text-sm font-bold mb-4">Get In Touch</h3>
             <div className="space-y-3">
               <a
                 href="https://wa.me/2348012345678?text=Hi!%20I%27m%20interested%20in%20your%20jerseys"
@@ -104,11 +110,11 @@ export function Footer() {
                 <span>WhatsApp</span>
               </a>
               <a
-                href="mailto:hello@jerseyhub.com"
+                href="mailto:kwalitijerseys@gmail.com"
                 className="flex items-center space-x-2 text-gray-400 hover:text-white text-sm transition-colors"
               >
                 <Mail className="w-4 h-4" />
-                <span>hello@kwalitijersey.com.ng</span>
+                <span>hello@kwalitijerseys.com</span>
               </a>
             </div>
           </div>
@@ -116,7 +122,7 @@ export function Footer() {
 
         <div className="border-t border-gray-800 mt-12 pt-8 text-center">
           <p className="text-gray-400 text-sm">
-            © {new Date().getFullYear()} KwalitiJersey. All rights reserved. |
+            © {new Date().getFullYear()} kwalitijerseys. All rights reserved. |
             Delivery across Nigeria
           </p>
         </div>
