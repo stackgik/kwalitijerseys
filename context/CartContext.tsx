@@ -8,42 +8,48 @@ import {
   useState,
 } from "react";
 
-export type CartItem = {
-  id: string;
+export interface ICartItem {
+  id: number;
   name: string;
   price: number;
   image: string;
   size: string;
   quantity: number;
+  version: "player" | "fan";
   customization?: {
     name?: string;
     number?: string;
-  } | null;
-};
+    price: number;
+  };
+}
 
 export type CartContextType = {
-  cartItems: CartItem[];
-  setCartItems: Dispatch<SetStateAction<CartItem[]>>;
-  addItem: (newItem: CartItem) => void;
-  removeItem: (itemId: string, itemSize: string) => void;
+  cartItems: ICartItem[];
+  setCartItems: Dispatch<SetStateAction<ICartItem[]>>;
+  addItem: (newItem: ICartItem) => void;
+  removeItem: (itemId: number) => void;
+  updateItem: (itemId: number, newItem: ICartItem) => void;
+  editingItem: ICartItem | null;
+  setEditingItem: Dispatch<SetStateAction<ICartItem | null>>;
   itemCount: number;
-  customizationFees?: number;
-  deliveryFee: number;
   subtotal: number;
-  total: number;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartItems, setCartItems] = useState<ICartItem[]>([]);
+  const [editingItem, setEditingItem] = useState<ICartItem | null>(null);
 
   // Add your cart methods here
-  const addItem = (newItem: CartItem) => {
+  const addItem = (newItem: ICartItem) => {
     // Check if item that matches size and name already exist and take action
     setCartItems((prev) => {
       const existing = prev.find(
-        (item) => item.id === newItem.id && item.size === newItem.size,
+        (item) =>
+          item.id === newItem.id &&
+          item.size === newItem.size &&
+          item.version === newItem.version,
       );
 
       if (existing) {
@@ -59,16 +65,26 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  const removeItem = (itemId: string, itemSize: string) => {
+  const removeItem = (itemId: number) => {
     setCartItems((prev) => {
-      return prev.filter(
-        (item) => item.id !== itemId || item.size !== itemSize,
-      );
+      return prev.filter((item) => item.id !== itemId);
     });
   };
 
   const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.quantity * item.price,
+    (sum, item) =>
+      sum + (item.price + (item.customization?.price ?? 0)) * item.quantity,
+    0,
+  );
+
+  const updateItem = (itemId: number, newItem: ICartItem) => {
+    setCartItems((prev) =>
+      prev.map((cartItem) => (cartItem.id !== itemId ? cartItem : newItem)),
+    );
+  };
+
+  const cartItemsCount = cartItems.reduce(
+    (sum, curr) => sum + curr.quantity,
     0,
   );
 
@@ -79,8 +95,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         setCartItems,
         addItem,
         removeItem,
-        itemCount: cartItems.length,
+        itemCount: cartItemsCount,
         subtotal,
+        updateItem,
+        editingItem,
+        setEditingItem,
       }}
     >
       {children}
