@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Shirt, ShoppingCart } from "lucide-react";
@@ -48,7 +48,7 @@ export function Header() {
             >
               <Shirt className="w-5 h-5 text-black transition-transform duration-200 group-hover:scale-110" />
               <span className="text-lg font-bold tracking-tight text-black">
-                steezesportswear
+                kwalitijerseys
               </span>
             </Link>
 
