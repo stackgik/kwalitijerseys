@@ -7,12 +7,3 @@ const CartPage = () => {
 };
 
 export default CartPage;
-
-{
-  /* <EmptyData
-      title="Your cart is empty"
-      description="Add some jerseys to get started"
-      action={() => router.push("/shop")}
-      btnContent="Continue shopping"
-    /> */
-}

@@ -55,9 +55,6 @@ export function Checkout() {
       return;
     }
 
-    const fee = DELIVERY_FEES[formData.state] || 3500;
-    const orderTotal = subtotal + fee;
-
     let message = `Hi! I want to place an order:\n\n`;
     message += `📦 ORDER DETAILS:\n`;
 
@@ -84,8 +81,8 @@ export function Checkout() {
 
     message += `\n💰 PRICING:\n`;
     message += `Subtotal: ₦${subtotal.toLocaleString()}\n`;
-    message += `Delivery Fee (${formData.state}): ₦${fee.toLocaleString()}\n`;
-    message += `TOTAL: ₦${orderTotal.toLocaleString()}\n`;
+    message += `Delivery Fee (${formData.state}): ₦${deliveryFee.toLocaleString()}\n`;
+    message += `TOTAL: ₦${total.toLocaleString()}\n`;
 
     message += `\n📍 DELIVERY INFORMATION:\n`;
     message += `Name: ${formData.fullName}\n`;
