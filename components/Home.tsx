@@ -1,71 +1,7 @@
+import { bestSellers, leagues } from "@/constant";
 import { Shield, Truck, BadgeCheck, ArrowRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-
-const bestSellers = [
-  {
-    id: 1,
-    name: "Manchester United Home",
-    team: "Man United",
-    season: "2024/25",
-    price: "₦15,000",
-    image:
-      "https://images.unsplash.com/photo-1662096909714-e2f206d0a636?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYW5jaGVzdGVyJTIwdW5pdGVkJTIwamVyc2V5fGVufDF8fHx8MTc3MDI4OTM1MHww&ixlib=rb-4.1.0&q=80&w=1080",
-  },
-  {
-    id: 2,
-    name: "Arsenal Home",
-    team: "Arsenal",
-    season: "2024/25",
-    price: "₦15,000",
-    image:
-      "https://images.unsplash.com/photo-1641570882851-72738e6e98ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnNlbmFsJTIwZm9vdGJhbGwlMjBqZXJzZXl8ZW58MXx8fHwxNzcwMjg5MzUxfDA&ixlib=rb-4.1.0&q=80&w=1080",
-  },
-  {
-    id: 3,
-    name: "Barcelona Home",
-    team: "Barcelona",
-    season: "2024/25",
-    price: "₦15,000",
-    image:
-      "https://images.unsplash.com/photo-1731335262206-60fc90a7a4e8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiYXJjZWxvbmElMjBmb290YmFsbCUyMGplcnNleXxlbnwxfHx8fDE3NzAxOTM4NTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-  },
-  {
-    id: 4,
-    name: "Real Madrid Home",
-    team: "Real Madrid",
-    season: "2024/25",
-    price: "₦15,000",
-    image:
-      "https://images.unsplash.com/photo-1760551733698-8e4a497d40d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZWFsJTIwbWFkcmlkJTIwZm9vdGJhbGwlMjBqZXJzZXl8ZW58MXx8fHwxNzcwMjg5MzUwfDA&ixlib=rb-4.1.0&q=80&w=1080",
-  },
-];
-
-const leagues = [
-  {
-    name: "Premier League",
-    image:
-      "https://images.unsplash.com/photo-1662096909687-7c64cde3524b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcmVtaWVyJTIwbGVhZ3VlJTIwZm9vdGJhbGwlMjBqZXJzZXl8ZW58MXx8fHwxNzcwMjg5MzQ5fDA&ixlib=rb-4.1.0&q=80&w=1080",
-    filter: "EPL",
-  },
-  {
-    name: "La Liga",
-    image:
-      "https://images.unsplash.com/photo-1731335262206-60fc90a7a4e8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiYXJjZWxvbmElMjBmb290YmFsbCUyMGplcnNleXxlbnwxfHx8fDE3NzAxOTM4NTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    filter: "La Liga",
-  },
-  {
-    name: "National Teams",
-    image:
-      "https://images.unsplash.com/photo-1649615353267-992042e18593?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuaWdlcmlhJTIwZm9vdGJhbGwlMjBqZXJzZXl8ZW58MXx8fHwxNzcwMjg5MzUxfDA&ixlib=rb-4.1.0&q=80&w=1080",
-    filter: "National",
-  },
-  {
-    name: "Retro Classics",
-    image:
-      "https://images.unsplash.com/photo-1759447946445-397b1c034768?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZXRybyUyMGZvb3RiYWxsJTIwamVyc2V5fGVufDF8fHx8MTc3MDI4OTM1Mnww&ixlib=rb-4.1.0&q=80&w=1080",
-    filter: "Retro",
-  },
-];
 
 export function Home() {
   return (
@@ -164,13 +100,14 @@ export function Home() {
             {bestSellers.map((jersey) => (
               <Link
                 key={jersey.id}
-                href={`/product/${jersey.id}`}
-                className="group bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow"
+                href={`/products/${jersey.id}`}
+                className="group bg-white rounded-lg overflow-hidden border border-gray-200"
               >
-                <div className="aspect-square bg-gray-100 overflow-hidden">
-                  <img
+                <div className="aspect-square bg-gray-100 overflow-hidden relative">
+                  <Image
                     src={jersey.image}
                     alt={jersey.name}
+                    fill
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
@@ -202,7 +139,9 @@ export function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
             <h2 className="text-3xl md:text-4xl mb-2">Shop by League</h2>
-            <p className="text-gray-600">Find your favorite team's jersey</p>
+            <p className="text-gray-600">
+              Find your favorite team&apos;s jersey
+            </p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
@@ -212,10 +151,11 @@ export function Home() {
                 href={`/shop?league=${league.filter}`}
                 className="group relative aspect-3/4 rounded-lg overflow-hidden"
               >
-                <img
+                <Image
                   src={league.image}
                   alt={league.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  fill
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-4">

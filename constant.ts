@@ -520,3 +520,69 @@ export const DELIVERY_FEES: Record<string, number> = {
 };
 
 export const AVAILABLE_JERSEY_SIZES = ["L", "XL", "XXL"];
+
+export const bestSellers = [
+  {
+    id: 1,
+    name: "Manchester United Home",
+    team: "Man United",
+    season: "2024/25",
+    price: "₦15,000",
+    image:
+      "https://images.unsplash.com/photo-1662096909714-e2f206d0a636?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYW5jaGVzdGVyJTIwdW5pdGVkJTIwamVyc2V5fGVufDF8fHx8MTc3MDI4OTM1MHww&ixlib=rb-4.1.0&q=80&w=1080",
+  },
+  {
+    id: 2,
+    name: "Arsenal Home",
+    team: "Arsenal",
+    season: "2024/25",
+    price: "₦15,000",
+    image:
+      "https://images.unsplash.com/photo-1641570882851-72738e6e98ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnNlbmFsJTIwZm9vdGJhbGwlMjBqZXJzZXl8ZW58MXx8fHwxNzcwMjg5MzUxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+  },
+  {
+    id: 3,
+    name: "Barcelona Home",
+    team: "Barcelona",
+    season: "2024/25",
+    price: "₦15,000",
+    image:
+      "https://images.unsplash.com/photo-1731335262206-60fc90a7a4e8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiYXJjZWxvbmElMjBmb290YmFsbCUyMGplcnNleXxlbnwxfHx8fDE3NzAxOTM4NTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+  },
+  {
+    id: 4,
+    name: "Real Madrid Home",
+    team: "Real Madrid",
+    season: "2024/25",
+    price: "₦15,000",
+    image:
+      "https://images.unsplash.com/photo-1760551733698-8e4a497d40d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZWFsJTIwbWFkcmlkJTIwZm9vdGJhbGwlMjBqZXJzZXl8ZW58MXx8fHwxNzcwMjg5MzUwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+  },
+];
+
+export const leagues = [
+  {
+    name: "Premier League",
+    image:
+      "https://images.unsplash.com/photo-1662096909687-7c64cde3524b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcmVtaWVyJTIwbGVhZ3VlJTIwZm9vdGJhbGwlMjBqZXJzZXl8ZW58MXx8fHwxNzcwMjg5MzQ5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+    filter: "EPL",
+  },
+  {
+    name: "La Liga",
+    image:
+      "https://images.unsplash.com/photo-1731335262206-60fc90a7a4e8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiYXJjZWxvbmElMjBmb290YmFsbCUyMGplcnNleXxlbnwxfHx8fDE3NzAxOTM4NTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+    filter: "La Liga",
+  },
+  {
+    name: "National Teams",
+    image:
+      "https://images.unsplash.com/photo-1649615353267-992042e18593?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuaWdlcmlhJTIwZm9vdGJhbGwlMjBqZXJzZXl8ZW58MXx8fHwxNzcwMjg5MzUxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+    filter: "National",
+  },
+  {
+    name: "Retro Classics",
+    image:
+      "https://images.unsplash.com/photo-1759447946445-397b1c034768?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZXRybyUyMGZvb3RiYWxsJTIwamVyc2V5fGVufDF8fHx8MTc3MDI4OTM1Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+    filter: "Retro",
+  },
+];
