@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from "@/context/CartContext";
+import Script from "next/script";
+import AuthModalProvider from "@/context/AuthModalContext";
+import AuthProxyModal from "@/components/AuthProxyModal";
+import { WishlistProvider } from "@/context/WishlistContext";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { getWishlistIds } from "./actions/products";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -13,38 +18,54 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "JerseyHub - Premium Football Jerseys in Nigeria",
+  title: "kwalitijerseys — Premium Pitch Wear & Football Kits Nigeria",
   description:
-    "Shop authentic and high-quality football jerseys from top clubs worldwide. Fast delivery across Nigeria. Original and replica jerseys available.",
+    "Source premium-grade player editions, authentic replicas, and historically precise vintage kits. Express track delivery serving all states across Nigeria.",
   keywords: [
     "football jerseys Nigeria",
-    "authentic jerseys",
-    "replica jerseys",
-    "football kits",
-    "sports apparel",
+    "premium kit replicas",
+    "player edition jersey Lagos",
+    "retro football kits",
+    "steeze sportswear",
   ],
   openGraph: {
-    title: "JerseyHub - Premium Football Jerseys",
-    description: "Nigeria's trusted source for authentic football jerseys",
+    title: "kwalitijerseys — Premium Football Kits",
+    description: "Nigeria's premier collective for high-end football garments.",
     type: "website",
   },
 };
 
-export default function RootLayout({
+const RootLayout = async ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) => {
+  const session = await auth.api.getSession({ headers: await headers() });
+  const wishlistIds = session?.user
+    ? await getWishlistIds(session.user.id)
+    : [];
+
   return (
-    <html lang="en" className="overflow-y-scroll">
-      <body className={`${nunito.className} font-sans antialiased`}>
-        <CartProvider>
-          <Header />
-          <main>{children}</main>
-          <Footer />
-          <Toaster />
-        </CartProvider>
+    <html lang="en" className="overflow-y-scroll scroll-smooth overscroll-none">
+      <body
+        className={`${nunito.className} font-sans antialiased bg-white text-black min-h-screen flex flex-col selection:bg-black selection:text-white overscroll-none`}
+      >
+        <AuthModalProvider>
+          <CartProvider>
+            <WishlistProvider initialWishlistIds={wishlistIds}>
+              <main className="flex-1 grow">{children}</main>
+              <Toaster position="top-center" />
+              <AuthProxyModal />
+            </WishlistProvider>
+          </CartProvider>
+        </AuthModalProvider>
+        <Script
+          src="https://js.paystack.co/v1/inline.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;
