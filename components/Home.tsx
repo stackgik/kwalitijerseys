@@ -187,7 +187,7 @@ export function Home() {
                 pitch.
               </p>
               <span className="text-[9px] font-bold text-neutral-400 block uppercase">
-                — Verified Plug Ops
+                — Verified Plug OGees
               </span>
             </div>
           </div>
