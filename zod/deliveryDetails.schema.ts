@@ -6,9 +6,15 @@ export const DeliveryDetailsSchema = z.object({
     .string()
     .min(3, "Please provide a valid name")
     .max(100, "Your name cannot be more than 100 characters"),
+  email: z.email(
+    "Please provide a valid email address for your digital receipt",
+  ),
   phoneNumber: z
     .string()
-    .regex(/^0\d{10}$/, "Please provide a valid 11-digit phone number"),
+    .regex(
+      /^(070|080|081|090|091|071)\d{8}$/,
+      "Provide a valid Nigerian phone number",
+    ),
   address: z
     .string()
     .min(10, "Please provide a descriptive delivery address")

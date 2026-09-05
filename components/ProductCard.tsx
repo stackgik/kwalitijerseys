@@ -1,57 +1,79 @@
+"use client";
+
 import formatCurrency from "@/helper/formatCurrency";
 import Image from "next/image";
 import Link from "next/link";
-import { toast } from "sonner";
+import WishlistBtn from "./WishlistBtn";
 
-type ProductProps = {
-  id: number;
-  name: string;
-  team: string;
-  league: string;
-  season: string;
-  price: number;
-  image: string;
-};
+const ProductCard = ({ product }: { product: IProductProps }) => {
+  const { id, images, name, season, priceInKobo, stock, createdAt } =
+    product || {};
 
-const ProductCard = ({ product }: { product: ProductProps }) => {
-  const { id, image, name, season, price } = product || {};
+  const isOutOfStock = stock === 0;
 
-  const addItem = (product: ProductProps) => {
-    const message = `${name} jersey has been added to the cart`;
-    const formattedMessage =
-      message.charAt(0).toUpperCase() + message.slice(1).toLowerCase();
-    toast.success(formattedMessage, {
-      position: "top-right",
-    });
-  };
+  const isNewArrival = ((): boolean => {
+    const twoWeeksAgo = new Date();
+    twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+    return new Date(createdAt) > twoWeeksAgo;
+  })();
 
   return (
-    <Link
-      href={`/products/${id}`}
-      className="group bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow"
-    >
-      <div className="aspect-square bg-gray-100 overflow-hidden">
-        <img
-          src={image}
-          alt={name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          // fill
-        />
-      </div>
+    <div className="relative">
+      {/* Floating Wishlist — outside the Link so hovers don't bleed */}
+      <WishlistBtn productId={id} />
 
-      <div className="p-3 sm:p-4">
-        <p className="text-xs text-gray-500 mb-1">{season}</p>
-        <h3 className="font-semibold mb-4 text-sm sm:text-base line-clamp-2">
-          {name}
-        </h3>
+      <Link
+        href={`/products/${id}`}
+        className="group flex flex-col w-full bg-white transition-all duration-300"
+      >
+        <div className="aspect-3/4 bg-gray-50 rounded-xl relative overflow-hidden border border-gray-100 shadow-2xs">
+          <Image
+            src={images[0]}
+            alt={name}
+            className={`w-full h-full object-cover group-hover:scale-103 transition-transform duration-500 ease-out ${
+              isOutOfStock ? "grayscale opacity-60" : ""
+            }`}
+            fill
+            sizes="(max-width: 768px) 50vw, 33vw"
+          />
 
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <p className="text-lg sm:text-xl font-bold">
-            {formatCurrency(price, "NGN")}
-          </p>
+          {isNewArrival && (
+            <div className="absolute bottom-3 left-3 bg-[#0A0A0A] text-white text-[8px] font-black uppercase tracking-widest px-2.5 py-1 rounded-none shadow-xs z-10">
+              New Arrival
+            </div>
+          )}
+
+          {isOutOfStock && (
+            <div className="absolute inset-0 bg-neutral-900/30 flex items-center justify-center z-10 pointer-events-none">
+              <span className="text-white font-black text-3xl sm:text-4xl tracking-tight drop-shadow-md">
+                Sold Out
+              </span>
+            </div>
+          )}
         </div>
-      </div>
-    </Link>
+
+        <div className="pt-3 pb-1 px-1 flex flex-col gap-1">
+          <div className="flex justify-between">
+            <span className="text-[10px] font-bold tracking-widest uppercase text-gray-400">
+              {season || "25/26 Season"}
+            </span>
+
+            <div className="text-xs font-bold text-neutral-900 flex items-center gap-1 z-10">
+              <span>4.9</span>
+              <span className="text-[#0A0A0A]">★</span>
+            </div>
+          </div>
+          <h3 className="font-bold text-xs sm:text-sm text-gray-900 tracking-tight group-hover:text-gray-600 transition-colors line-clamp-1">
+            {name}
+          </h3>
+          <div className="flex items-center justify-between pt-0.5">
+            <p className="text-xs sm:text-sm font-black text-gray-900 tabular-nums">
+              {formatCurrency(priceInKobo / 100, "NGN")}
+            </p>
+          </div>
+        </div>
+      </Link>
+    </div>
   );
 };
 

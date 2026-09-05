@@ -1,24 +1,31 @@
 "use client";
 
 import { useState } from "react";
-import {
-  ArrowLeft,
-  Check,
-  Truck,
-  Shield,
-  MessageCircle,
-  ShoppingCart,
-  Info,
-} from "lucide-react";
+import { ArrowLeft, ShoppingCart, Info, Plus, Minus } from "lucide-react";
 import { toast } from "sonner";
-import { AVAILABLE_JERSEY_SIZES, products } from "@/constant";
+import {
+  AVAILABLE_JERSEY_SIZES,
+  JERSEY_FEATURES,
+  VERSION_UPCHARGE_KOBO,
+} from "@/constant";
 import { useCart } from "@/context/CartContext";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import VersionGuideSheet from "./VersionGuideSheet";
+import SizeGuideSheet from "./SizeGuideSheet";
+import formatCurrency from "@/helper/formatCurrency";
+import { ProductCareAndShipping } from "./ProductCareAndShipping";
+import { CompleteTheSteeze } from "./CompleteTheSteeze";
 
-export function ProductDetail() {
-  const params = useParams();
+export function ProductDetail({
+  productDetails,
+  products,
+}: {
+  productDetails: IProductDetails;
+  products: IProductData[];
+  currentProductId: string;
+}) {
   const router = useRouter();
   const { addItem } = useCart();
   const [selectedSize, setSelectedSize] = useState("");
@@ -33,147 +40,101 @@ export function ProductDetail() {
   const [showSizeGuide, setShowSizeGuide] = useState(false);
   const [showVersionGuide, setShowVersionGuide] = useState(false);
 
-  const product = products.find((p) => p.id === Number(params.id));
-
-  if (!product) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl mb-4">Product not found</h2>
-          <Link href="/shop" className="text-sm hover:underline">
-            Back to Shop
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  const productPrice = productDetails.priceInKobo / 100;
 
   const calculateCustomizationPrice = () => {
-    if (!customizationEnabled) return 0;
-    if (!customName.trim() && !customNumber.trim()) return 0;
-    const numberLength = customNumber.trim().length;
-    return numberLength >= 3 ? 6000 : 5000;
+    if (!customizationEnabled || (!customName.trim() && !customNumber.trim()))
+      return 0;
+    return customNumber.trim().length >= 3 ? 6000 : 5000;
   };
 
   const getVersionPrice = () => {
-    return selectedVersion === "player" ? product.price + 5000 : product.price;
+    return selectedVersion === "player"
+      ? productPrice + VERSION_UPCHARGE_KOBO / 100
+      : productPrice;
   };
 
   const getTotalPrice = () => {
-    const basePrice = getVersionPrice();
-    const customPrice = calculateCustomizationPrice();
-    return (basePrice + customPrice) * quantity;
+    return (getVersionPrice() + calculateCustomizationPrice()) * quantity;
   };
+
+  const compileLineItem = () => ({
+    cartItemId: crypto.randomUUID(),
+    productId: productDetails.id,
+    name: productDetails.name,
+    priceInKobo: getVersionPrice() * 100,
+    size: selectedSize,
+    type: productDetails.type as "current" | "modern" | "retro",
+    quantity: quantity,
+    image: productDetails.images[0].url,
+    ...(productDetails.type !== "retro" && { version: selectedVersion }),
+    ...(customizationEnabled &&
+      (customName.trim() || customNumber.trim()) && {
+        customization: {
+          name: customName.trim() || undefined,
+          number: customNumber.trim() || undefined,
+          price: calculateCustomizationPrice(),
+        },
+      }),
+  });
 
   const handleAddToCart = () => {
     if (!selectedSize) {
-      toast.error("Please select a size");
+      toast.error("Please select a size before adding to your bag.");
       return;
     }
-
-    if (customizationEnabled && !customName.trim() && !customNumber.trim()) {
-      toast.error(
-        "Please add a name or number for customization, or disable it",
-      );
-      return;
-    }
-
-    const cartItem = {
-      id: product.id,
-      name: product.name,
-      price: getVersionPrice(),
-      size: selectedSize,
-      version: selectedVersion,
-      quantity: quantity,
-      image: product.images[0],
-      ...(customizationEnabled &&
-        (customName.trim() || customNumber.trim()) && {
-          customization: {
-            name: customName.trim() || undefined,
-            number: customNumber.trim() || undefined,
-            price: calculateCustomizationPrice(),
-          },
-        }),
-    };
-
-    addItem(cartItem);
-    toast.success("Added to cart!");
+    const newCartItem = compileLineItem();
+    addItem(newCartItem);
+    toast.success(productDetails.name + " has been added to basket");
   };
 
-  const handleBuyNow = () => {
+  // const handleExpressBuy = () => {};
+  const handleExpressBuy = () => {
+    // 1. Validation Guard
     if (!selectedSize) {
-      toast.error("Please select a size");
+      toast.error("Please select a size before checking out.");
       return;
     }
 
-    if (customizationEnabled && !customName.trim() && !customNumber.trim()) {
-      toast.error(
-        "Please add a name or number for customization, or disable it",
-      );
-      return;
-    }
+    // 2. Build the exact payload schema matching your standard ICartItem interface
+    const lineItem = compileLineItem();
+    // 3. Stash the object in the current tab session storage vault
+    sessionStorage.setItem("express_checkout_item", JSON.stringify(lineItem));
 
-    // Add to cart and navigate to checkout
-    const cartItem = {
-      id: product.id,
-      name: product.name,
-      price: getVersionPrice(),
-      size: selectedSize,
-      version: selectedVersion,
-      quantity: quantity,
-      image: product.images[0],
-      ...(customizationEnabled &&
-        (customName.trim() || customNumber.trim()) && {
-          customization: {
-            name: customName.trim() || undefined,
-            number: customNumber.trim() || undefined,
-            price: calculateCustomizationPrice(),
-          },
-        }),
-    };
-
-    addItem(cartItem);
-    router.push("/checkout");
+    // 4. Fire the route transition with a clear modal intent parameter
+    router.push("/checkout?mode=express");
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Back Button */}
+    <div className="min-h-screen bg-white text-gray-900 selection:bg-black selection:text-white antialiased">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 lg:py-10">
         <Link
           href="/shop"
-          className="inline-flex items-center text-sm text-gray-600 hover:text-black mb-6 transition-colors"
+          className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-gray-500 hover:text-black mb-8 transition-colors group"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft className="w-3.5 h-3.5 mr-2 group-hover:-translate-x-0.5 transition-transform" />
           Back to Shop
         </Link>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          {/* Product Images */}
-          <div className="space-y-4">
-            <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden relative">
-              <Image
-                src={product.images[currentImageIndex]}
-                alt={product.name}
-                className="w-full h-full object-cover"
-                fill
-              />
-            </div>
-            {product.images.length > 1 && (
-              <div className="flex gap-2">
-                {product.images.map((image, index) => (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+          {/* LEFT: Product Images Showcase Matrix */}
+          <div className="lg:col-span-7 flex flex-col-reverse lg:flex-row gap-4 lg:sticky lg:top-6">
+            {/* Thumbnail Navigation List */}
+            {productDetails.images.length > 1 && (
+              <div className="flex flex-row lg:flex-col gap-2.5 overflow-x-auto lg:overflow-y-auto lg:max-h-125 pb-2 lg:pb-0 scrollbar-none shrink-0">
+                {productDetails.images.map((image, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
-                    className={`w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors relative ${
+                    className={`w-20 h-24 rounded-xl overflow-hidden transition-all duration-300 relative border shrink-0 ${
                       currentImageIndex === index
-                        ? "border-black"
-                        : "border-gray-200"
+                        ? "border-black ring-2 ring-black/5"
+                        : "border-zinc-200 opacity-60 hover:opacity-100"
                     }`}
                   >
                     <Image
-                      src={image}
-                      alt={`${product.name} ${index + 1}`}
+                      src={image.url}
+                      alt={`${image.id} preview ${index + 1}`}
                       className="w-full h-full object-cover"
                       fill
                     />
@@ -182,129 +143,99 @@ export function ProductDetail() {
               </div>
             )}
 
-            {/* Trust Signals - Mobile */}
-            <div className="lg:hidden grid grid-cols-1 gap-3 mt-6 p-4 bg-gray-50 rounded-lg">
-              <div className="flex items-center space-x-3">
-                <div className="bg-white p-2 rounded-lg">
-                  <Truck className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-xs font-medium">Fast Delivery</p>
-                  <p className="text-xs text-gray-600">2-5 days nationwide</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="bg-white p-2 rounded-lg">
-                  <Shield className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-xs font-medium">Quality Guaranteed</p>
-                  <p className="text-xs text-gray-600">Every item checked</p>
-                </div>
-              </div>
+            {/* Main Focal Frame */}
+            <div className="grow aspect-4/5 bg-zinc-50 rounded-2xl overflow-hidden relative border border-zinc-100">
+              <Image
+                src={productDetails.images[currentImageIndex].url}
+                alt={productDetails.name}
+                className="w-full h-full object-cover transition-all duration-500"
+                fill
+                priority
+              />
             </div>
           </div>
 
-          {/* Product Info */}
-          <div>
-            {/* Header */}
-            <div className="mb-6">
-              <p className="text-sm text-gray-500 mb-2">
-                {product.league} • {product.season}
-              </p>
-              <h1 className="text-3xl md:text-4xl mb-3">{product.name}</h1>
-              <p className="text-gray-700 mb-4">{product.description}</p>
-              <div className="flex items-baseline gap-3">
-                <p className="text-3xl font-bold">
-                  ₦{getVersionPrice().toLocaleString()}
+          {/* RIGHT: Product Info */}
+          <div className="lg:col-span-5">
+            <div className="mb-6 pb-6 border-b border-gray-100">
+              <span className="text-xs font-bold tracking-widest text-gray-400 uppercase block mb-2">
+                {productDetails.league} • {productDetails.season}
+              </span>
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 mb-3">
+                {productDetails.name}
+              </h1>
+              <div className="flex items-baseline gap-3 mt-4">
+                <p className="text-2xl sm:text-3xl font-black text-gray-900 tabular-nums">
+                  {/* ₦{getVersionPrice().toLocaleString()} */}
+                  {formatCurrency(getVersionPrice(), "NGN")}
                 </p>
                 {selectedVersion === "player" && (
-                  <span className="text-sm text-gray-500 line-through">
-                    ₦{product.price.toLocaleString()}
+                  <span className="text-sm font-medium text-gray-400 line-through tabular-nums">
+                    ₦{(productDetails.priceInKobo / 100).toLocaleString()}
                   </span>
                 )}
               </div>
-              {customizationEnabled && calculateCustomizationPrice() > 0 && (
-                <p className="text-sm text-gray-600 mt-1">
-                  + ₦{calculateCustomizationPrice().toLocaleString()}{" "}
-                  customization
-                </p>
-              )}
             </div>
 
             {/* Version Selection */}
-            <div className="mb-6">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold">Version</h3>
-                <button
-                  onClick={() => setShowVersionGuide(!showVersionGuide)}
-                  className="text-xs text-gray-600 hover:text-black flex items-center gap-1"
-                >
-                  <Info className="w-3 h-3" />
-                  Version Guide
-                </button>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  onClick={() => setSelectedVersion("fan")}
-                  className={`px-4 py-3 border-2 rounded-lg transition-colors font-medium ${
-                    selectedVersion === "fan"
-                      ? "border-black bg-black text-white"
-                      : "border-gray-200 hover:border-gray-300"
-                  }`}
-                >
-                  <div>
-                    <div className="text-sm">Fan Version</div>
-                    <div className="text-xs opacity-75">
-                      ₦{product.price.toLocaleString()}
-                    </div>
-                  </div>
-                </button>
-                <button
-                  onClick={() => setSelectedVersion("player")}
-                  className={`px-4 py-3 border-2 rounded-lg transition-colors font-medium ${
-                    selectedVersion === "player"
-                      ? "border-black bg-black text-white"
-                      : "border-gray-200 hover:border-gray-300"
-                  }`}
-                >
-                  <div>
-                    <div className="text-sm">Player Version</div>
-                    <div className="text-xs opacity-75">
-                      ₦{(product.price + 5000).toLocaleString()}
-                    </div>
-                  </div>
-                </button>
-              </div>
-              {showVersionGuide && (
-                <div className="mt-3 p-3 bg-gray-50 rounded-lg text-sm space-y-2">
-                  <div>
-                    <p className="font-medium">Fan Version</p>
-                    <p className="text-xs text-gray-600">
-                      Comfortable for everyday wear. Lightweight and breathable.
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-medium">Player Version</p>
-                    <p className="text-xs text-gray-600">
-                      Match-fit performance. Tighter fit, superior
-                      moisture-wicking technology.
-                    </p>
-                  </div>
+            {productDetails.type === "retro" ? (
+              ""
+            ) : (
+              <div className="mb-6">
+                <div className="flex items-center justify-between mb-2.5">
+                  <h3 className="text-xs font-bold tracking-wider uppercase text-gray-500">
+                    Kit Style
+                  </h3>
+                  <button
+                    onClick={() => setShowVersionGuide(true)}
+                    className="text-xs text-gray-500 hover:text-black flex items-center gap-1 transition-colors font-medium"
+                  >
+                    <Info className="w-3.5 h-3.5" />
+                    <span>Version Guide</span>
+                  </button>
                 </div>
-              )}
-            </div>
+                <div className="grid grid-cols-2 gap-3">
+                  {(["fan", "player"] as const).map((v) => (
+                    <button
+                      key={v}
+                      onClick={() => setSelectedVersion(v)}
+                      className={`p-3.5 text-left border rounded-xl transition-all duration-200 ${
+                        selectedVersion === v
+                          ? "border-black bg-black text-white shadow-xs"
+                          : "border-gray-200 bg-white text-gray-800"
+                      }`}
+                    >
+                      <span className="block text-xs font-bold capitalize tracking-wide">
+                        {v} Version
+                      </span>
+                      <span
+                        className={`block text-[11px] mt-0.5 ${selectedVersion === v ? "text-gray-300" : "text-gray-500"}`}
+                      >
+                        {v === "player"
+                          ? formatCurrency(
+                              productPrice + VERSION_UPCHARGE_KOBO / 100,
+                              "NGN",
+                            )
+                          : formatCurrency(productPrice, "NGN")}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Size Selection */}
             <div className="mb-6">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold">Select Size</h3>
+              <div className="flex items-center justify-between mb-2.5">
+                <h3 className="text-xs font-bold tracking-wider uppercase text-gray-500">
+                  Select Size
+                </h3>
                 <button
-                  onClick={() => setShowSizeGuide(!showSizeGuide)}
-                  className="text-xs text-gray-600 hover:text-black flex items-center gap-1"
+                  onClick={() => setShowSizeGuide(true)}
+                  className="text-xs text-gray-500 hover:text-black flex items-center gap-1 transition-colors font-medium"
                 >
-                  <Info className="w-3 h-3" />
-                  Size Guide
+                  <Info className="w-3.5 h-3.5" />
+                  <span>Measurements</span>
                 </button>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -312,57 +243,30 @@ export function ProductDetail() {
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
-                    className={`px-6 py-3 border-2 rounded-lg transition-colors font-medium ${
+                    className={`min-w-13.5 h-11 border text-sm font-semibold rounded-xl flex items-center justify-center transition-all ${
                       selectedSize === size
-                        ? "border-black bg-black text-white"
-                        : "border-gray-200 hover:border-gray-300"
+                        ? "border-black bg-black text-white shadow-xs"
+                        : "border-gray-200 text-gray-800 bg-white"
                     }`}
                   >
                     {size}
                   </button>
                 ))}
               </div>
-              {showSizeGuide && (
-                <div className="mt-3 p-3 bg-gray-50 rounded-lg text-sm">
-                  <table className="w-full text-xs">
-                    <thead>
-                      <tr className="border-b border-gray-200">
-                        <th className="text-left py-2">Size</th>
-                        <th className="text-left py-2">Chest (inches)</th>
-                        <th className="text-left py-2">Length (inches)</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td className="py-2">L</td>
-                        <td className="py-2">42-44</td>
-                        <td className="py-2">28-29</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2">XL</td>
-                        <td className="py-2">44-46</td>
-                        <td className="py-2">29-30</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2">XXL</td>
-                        <td className="py-2">46-48</td>
-                        <td className="py-2">30-31</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              )}
             </div>
 
-            {/* Quantity Selection */}
+            {/* Quantity Selector */}
             <div className="mb-6">
-              <h3 className="font-semibold mb-3">Quantity</h3>
-              <div className="flex items-center gap-3">
+              <h3 className="text-xs font-bold tracking-wider uppercase text-gray-500 mb-2.5">
+                Quantity
+              </h3>
+              <div className="flex items-center border border-gray-200 rounded-xl w-fit p-1 bg-gray-50">
                 <button
+                  type="button"
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-10 h-10 border-2 border-gray-200 rounded-lg hover:border-gray-300 transition-colors font-medium cursor-pointer"
+                  className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-500 hover:text-black hover:bg-white transition-all"
                 >
-                  -
+                  <Minus className="w-3.5 h-3.5" />
                 </button>
                 <input
                   type="text"
@@ -370,30 +274,31 @@ export function ProductDetail() {
                   onChange={(e) =>
                     setQuantity(Math.max(1, parseInt(e.target.value) || 1))
                   }
-                  className="w-16 h-10 text-center border-2 border-gray-200 rounded-lg focus:border-black focus:outline-none"
-                  min="1"
+                  className="w-12 text-center text-sm font-bold bg-transparent text-gray-900 focus:outline-none tabular-nums"
                 />
                 <button
+                  type="button"
                   onClick={() => setQuantity(quantity + 1)}
-                  className="w-10 h-10 border-2 border-gray-200 rounded-lg hover:border-gray-300 transition-colors font-medium cursor-pointer"
+                  className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-500 hover:text-black hover:bg-white transition-all"
                 >
-                  +
+                  <Plus className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
 
-            {/* Customization Section */}
-            <div className="mb-6 border-2 border-gray-200 rounded-lg p-4">
-              <div className="flex items-center justify-between mb-3">
+            {/* Customization Area */}
+            <div className="mb-8 border border-gray-100 rounded-xl bg-gray-50/50 p-4">
+              <div className="flex items-start justify-between gap-4">
                 <div>
-                  <h3 className="font-semibold">
-                    Jersey Customization (Optional)
-                  </h3>
-                  <p className="text-xs text-gray-600 mt-1">
-                    Add name and number to your jersey
+                  <h4 className="text-sm font-semibold text-gray-900">
+                    Custom Kit Printing
+                  </h4>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Stitch your custom name and number tag
                   </p>
                 </div>
                 <button
+                  type="button"
                   onClick={() => {
                     setCustomizationEnabled(!customizationEnabled);
                     if (customizationEnabled) {
@@ -401,24 +306,24 @@ export function ProductDetail() {
                       setCustomNumber("");
                     }
                   }}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm ${
+                  className={`text-xs font-bold px-3 py-1.5 rounded-lg border transition-all ${
                     customizationEnabled
-                      ? "bg-black text-white"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      ? "bg-black text-white border-black"
+                      : "bg-white text-gray-700 border-gray-200"
                   }`}
                 >
-                  {customizationEnabled ? "Remove" : "Add"}
+                  {customizationEnabled ? "Remove" : "Add Print"}
                 </button>
               </div>
 
               {customizationEnabled && (
-                <div className="space-y-4 mt-4 pt-4 border-t border-gray-200">
+                <div className="space-y-3.5 mt-4 pt-4 border-t border-gray-200/60 transition-all">
                   <div>
                     <label
                       htmlFor="custom-name"
-                      className="block text-sm font-medium mb-2"
+                      className="block text-[11px] font-bold text-gray-400 uppercase mb-1.5"
                     >
-                      Name on Jersey
+                      Name Placement
                     </label>
                     <input
                       id="custom-name"
@@ -427,124 +332,140 @@ export function ProductDetail() {
                       onChange={(e) =>
                         setCustomName(e.target.value.toUpperCase())
                       }
-                      placeholder="e.g., RONALDO"
+                      placeholder="e.g., MBAPPÉ"
                       maxLength={20}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-black focus:outline-none transition-colors uppercase"
+                      className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl focus:border-black focus:outline-none bg-white text-sm uppercase font-semibold tracking-wide"
                     />
                   </div>
-
                   <div>
                     <label
                       htmlFor="custom-number"
-                      className="block text-sm font-medium mb-2"
+                      className="block text-[11px] font-bold text-gray-400 uppercase mb-1.5"
                     >
-                      Jersey Number
+                      Squad Number
                     </label>
                     <input
                       id="custom-number"
                       type="text"
                       value={customNumber}
                       onChange={(e) => {
-                        const value = e.target.value.replace(/[^0-9]/g, "");
-                        if (value.length <= 3) {
-                          setCustomNumber(value);
-                        }
+                        const val = e.target.value.replace(/[^0-9]/g, "");
+                        if (val.length <= 3) setCustomNumber(val);
                       }}
-                      placeholder="e.g., 7"
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-black focus:outline-none transition-colors"
+                      placeholder="e.g., 10"
+                      className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl focus:border-black focus:outline-none bg-white text-sm font-bold"
                     />
-                    <p className="text-xs text-gray-500 mt-1">
-                      Maximum 3 digits
-                    </p>
                   </div>
-
-                  <div className="bg-gray-50 rounded-lg p-3 text-sm">
-                    <p className="font-medium mb-1">Customization Pricing:</p>
-                    <p className="text-gray-600">• 1-2 numbers: ₦5,000</p>
-                    <p className="text-gray-600">• 3 numbers: ₦6,000</p>
+                  {/* Pricing Notice */}
+                  <div className="bg-gray-50 border border-gray-100 p-3 rounded-xl">
+                    <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1">
+                      Customization Pricing
+                    </p>
+                    <p className="text-xs font-semibold text-gray-600 leading-relaxed">
+                      Customization with 1–2 digits cost{" "}
+                      <span className="text-black font-black">₦5,000</span>,
+                      while one with 3-digit number costs{" "}
+                      <span className="text-black font-black">₦6,000</span>.
+                    </p>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Action Buttons */}
-            <div className="space-y-3 mb-6">
-              <button
-                onClick={handleBuyNow}
-                className="w-full bg-black text-white py-4 rounded-lg hover:bg-gray-800 transition-colors font-medium text-lg flex items-center justify-center space-x-2"
-              >
-                <MessageCircle className="w-5 h-5" />
-                <span>Buy Now • ₦{getTotalPrice().toLocaleString()}</span>
-              </button>
-              <button
-                onClick={handleAddToCart}
-                className="w-full bg-white text-black border-2 border-black py-4 rounded-lg hover:bg-gray-50 transition-colors font-medium text-lg flex items-center justify-center space-x-2"
-              >
-                <ShoppingCart className="w-5 h-5" />
-                <span>Add to Cart</span>
-              </button>
+            {/* Features section */}
+            <div className="mb-8 grid grid-cols-2 gap-3.5 border-t border-b border-gray-100 py-6">
+              {JERSEY_FEATURES.map((feature, idx) => (
+                <div key={idx} className="flex items-center gap-2.5 group">
+                  <div className="w-5 h-5 rounded-full bg-zinc-50 border border-zinc-100 flex items-center justify-center shrink-0 group-hover:bg-black group-hover:border-black transition-colors duration-300">
+                    <svg
+                      className="w-3 h-3 text-zinc-600 group-hover:text-white transition-colors duration-300"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                  <span className="text-xs font-semibold text-zinc-600 group-hover:text-black transition-colors duration-200 capitalize">
+                    {feature}
+                  </span>
+                </div>
+              ))}
             </div>
 
-            {/* Product Features */}
-            <div className="mb-6 pb-6 border-b border-gray-200">
-              <h3 className="font-semibold mb-3">Product Features</h3>
-              <ul className="space-y-2">
-                {product.features.map((feature, index) => (
-                  <li key={index} className="flex items-start space-x-2">
-                    <Check className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {/* Smart Checkout CTAs */}
+            {/* Actions Purchase Matrix Container */}
+            <div className="grid grid-cols-1 gap-3 mb-8">
+              {productDetails.stock > 0 ? (
+                <>
+                  {/* Primary: Express Transaction Vector */}
+                  <button
+                    onClick={handleExpressBuy}
+                    className="w-full bg-zinc-950 text-white h-13 rounded-xl hover:bg-zinc-900 active:scale-[0.99] transition-all font-semibold text-sm shadow-md shadow-zinc-950/10 flex items-center justify-center gap-1.5"
+                  >
+                    <span>Express Buy Now</span>
+                    <span className="opacity-40 text-xs">•</span>
+                    <span className="font-medium text-zinc-300">
+                      {/* ₦{getTotalPrice().toLocaleString()} */}
+                      {formatCurrency(getTotalPrice(), "NGN")}
+                    </span>
+                  </button>
 
-            {/* Description */}
-            <div className="mb-6 pb-6 border-b border-gray-200">
-              <h3 className="font-semibold mb-3">About This Jersey</h3>
-              <p className="text-gray-700 text-sm leading-relaxed">
-                {product.description}
-              </p>
-            </div>
-
-            {/* Trust Signals - Desktop */}
-            <div className="hidden lg:grid grid-cols-1 gap-4">
-              <div className="flex items-center space-x-3">
-                <div className="bg-gray-100 p-2 rounded-lg">
-                  <Truck className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Fast Delivery</p>
-                  <p className="text-xs text-gray-600">
-                    2-5 days across Nigeria
+                  {/* Secondary: Persistent Cart Injection */}
+                  <button
+                    onClick={handleAddToCart}
+                    className="w-full bg-white border border-zinc-200 text-zinc-900 h-13 rounded-xl hover:bg-zinc-50 active:scale-[0.99] transition-all font-semibold text-sm flex items-center justify-center gap-2"
+                  >
+                    <ShoppingCart className="w-4 h-4 text-zinc-500" />
+                    <span>Add to Cart</span>
+                  </button>
+                </>
+              ) : (
+                /* Out of Stock Mode: Retains clean design balance without clashing options */
+                <div className="space-y-3">
+                  <button
+                    disabled
+                    className="w-full bg-zinc-100 text-zinc-400 h-13 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 cursor-not-allowed border border-zinc-200/50"
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-zinc-400" />
+                    Out of Stock
+                  </button>
+                  <p className="text-center text-xs text-zinc-500 font-medium leading-relaxed">
+                    This jersey configuration is currently unavailable. Restocks
+                    are updated weekly via WhatsApp updates.
                   </p>
                 </div>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="bg-gray-100 p-2 rounded-lg">
-                  <Shield className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Quality Guaranteed</p>
-                  <p className="text-xs text-gray-600">
-                    Every item quality checked
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="bg-gray-100 p-2 rounded-lg">
-                  <MessageCircle className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Easy Ordering</p>
-                  <p className="text-xs text-gray-600">
-                    Order directly via WhatsApp
-                  </p>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
+
+        {/* 1. Trust, Care, and Logistics Accordion */}
+        <ProductCareAndShipping />
+
+        {/* 2. Personalized Catalog Recommendation Slider */}
+        <CompleteTheSteeze
+          currentProductId={productDetails.id}
+          products={products}
+        />
       </div>
+
+      {/* Version Guide Sheet */}
+      <VersionGuideSheet
+        showVersionGuide={showVersionGuide}
+        setShowVersionGuide={setShowVersionGuide}
+      />
+
+      {/* Size Guide Sheet */}
+      <SizeGuideSheet
+        showSizeGuide={showSizeGuide}
+        setShowSizeGuide={setShowSizeGuide}
+      />
     </div>
   );
 }

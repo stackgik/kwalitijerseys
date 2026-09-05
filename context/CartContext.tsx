@@ -5,30 +5,17 @@ import {
   Dispatch,
   SetStateAction,
   useContext,
+  useEffect,
   useState,
 } from "react";
-
-export interface ICartItem {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  size: string;
-  quantity: number;
-  version: "player" | "fan";
-  customization?: {
-    name?: string;
-    number?: string;
-    price: number;
-  };
-}
 
 export type CartContextType = {
   cartItems: ICartItem[];
   setCartItems: Dispatch<SetStateAction<ICartItem[]>>;
   addItem: (newItem: ICartItem) => void;
-  removeItem: (itemId: number) => void;
-  updateItem: (itemId: number, newItem: ICartItem) => void;
+  removeItem: (itemId: string) => void;
+  updateItem: (itemId: string, newItem: ICartItem) => void;
+  clearCart: () => void;
   editingItem: ICartItem | null;
   setEditingItem: Dispatch<SetStateAction<ICartItem | null>>;
   itemCount: number;
@@ -37,51 +24,77 @@ export type CartContextType = {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+const LOCAL_STORAGE_KEY = "kwalitijerseys_global_cart";
+
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [cartItems, setCartItems] = useState<ICartItem[]>([]);
+  const [cartItems, setCartItems] = useState<ICartItem[]>(() => {
+    if (typeof window === "undefined") return [];
+
+    const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (error) {
+        console.error("Error parsing cart data from localStorage:", error);
+        localStorage.removeItem(LOCAL_STORAGE_KEY);
+      }
+    }
+    return [];
+  });
+
   const [editingItem, setEditingItem] = useState<ICartItem | null>(null);
 
-  // Add your cart methods here
+  // Expunge cart data from localStorage whenever cartItems changes
+  useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
   const addItem = (newItem: ICartItem) => {
-    // Check if item that matches size and name already exist and take action
     setCartItems((prev) => {
-      const existing = prev.find(
+      // Find matching item based on identity, size, and version tier
+      const existingIndex = prev.findIndex(
         (item) =>
-          item.id === newItem.id &&
+          item.productId === newItem.productId &&
           item.size === newItem.size &&
           item.version === newItem.version,
       );
 
-      if (existing) {
-        return prev.map((item) =>
-          item.id === newItem.id && item.size === newItem.size
-            ? { ...item, quantity: item.quantity + 1 }
+      if (existingIndex > -1) {
+        return prev.map((item, idx) =>
+          idx === existingIndex
+            ? { ...item, quantity: item.quantity + newItem.quantity }
             : item,
         );
       }
 
-      // If none matches, update the list with the new item.
       return [...prev, newItem];
     });
   };
 
-  const removeItem = (itemId: number) => {
-    setCartItems((prev) => {
-      return prev.filter((item) => item.id !== itemId);
-    });
+  const removeItem = (itemId: string) => {
+    setCartItems((prev) => prev.filter((item) => item.cartItemId !== itemId));
   };
 
-  const subtotal = cartItems.reduce(
-    (sum, item) =>
-      sum + (item.price + (item.customization?.price ?? 0)) * item.quantity,
-    0,
-  );
-
-  const updateItem = (itemId: number, newItem: ICartItem) => {
+  const updateItem = (itemId: string, newItem: ICartItem) => {
     setCartItems((prev) =>
-      prev.map((cartItem) => (cartItem.id !== itemId ? cartItem : newItem)),
+      prev.map((cartItem) =>
+        cartItem.cartItemId !== itemId ? cartItem : newItem,
+      ),
     );
   };
+
+  // Math metrics
+  const subtotal = cartItems.reduce(
+    (sum, item) =>
+      sum +
+      (item.priceInKobo / 100 + (item.customization?.price ?? 0)) *
+        item.quantity,
+    0,
+  );
 
   const cartItemsCount = cartItems.reduce(
     (sum, curr) => sum + curr.quantity,
@@ -95,6 +108,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         setCartItems,
         addItem,
         removeItem,
+        clearCart,
         itemCount: cartItemsCount,
         subtotal,
         updateItem,

@@ -1,274 +1,221 @@
-import { Shield, Truck, BadgeCheck, Heart, Star, MapPin } from "lucide-react";
+"use client";
+
+import {
+  Shield,
+  Truck,
+  BadgeCheck,
+  Heart,
+  Star,
+  MapPin,
+  CheckCircle2,
+} from "lucide-react";
 
 export function About() {
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="bg-linear-to-br from-black via-gray-900 to-black text-white py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl mb-4">About KwalitiJersey</h1>
-          <p className="text-lg text-gray-300">
-            Nigeria's most trusted source for authentic and premium football
-            jerseys
+    <div className="bg-white text-black antialiased selection:bg-black selection:text-white">
+      {/* 1. Header Hero Panel */}
+      <section className="border-b border-gray-100 py-16 md:py-24 bg-gray-50/40">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3">
+          <span className="text-[10px] font-bold tracking-widest uppercase text-gray-400 block">
+            Behind the Stitching
+          </span>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-gray-900">
+            About KwalitiJerseys
+          </h1>
+          <p className="text-sm md:text-base text-gray-500 font-medium max-w-lg mx-auto leading-relaxed">
+            Curating premium pitch wear and historically precise retro
+            architecture for the absolute football purist across Nigeria.
           </p>
         </div>
       </section>
 
-      {/* Our Story */}
-      <section className="py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl mb-4">Our Story</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              We started KwalitiJersey with a simple mission: to make authentic
-              football jerseys accessible to every Nigerian fan. Whether you
-              support a local club or an international giant, we've got you
-              covered.
-            </p>
+      {/* 2. Manifesto / Our Story */}
+      <section className="py-16 md:py-24 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-start">
+          <div className="md:col-span-4 lg:sticky lg:top-24">
+            <span className="text-[10px] font-bold tracking-widest uppercase text-gray-400 block mb-2">
+              The Genesis
+            </span>
+            <h2 className="text-xl sm:text-2xl font-black tracking-tight text-gray-900 uppercase">
+              Curating for <br />
+              the Culture.
+            </h2>
           </div>
-
-          <div className="prose prose-lg mx-auto">
-            <p className="text-gray-700">
-              As football fans ourselves, we understand the importance of
-              representing your team with pride. That's why we source only the
-              highest quality jerseys—both original and premium
-              replicas—ensuring you get the best value for your money.
+          <div className="md:col-span-8 space-y-6 text-sm font-medium text-gray-600 leading-relaxed">
+            <p>
+              KwalitiJerseys wasn’t born from business spreadsheets; it grew
+              straight out of raw terrace subculture. We realized it was
+              entirely too difficult for fans across Nigeria to get their hands
+              on premium-grade replicas, exact player-spec threadings, and
+              flawless historical retros without dealing with sub-par material
+              or endless logistics bottlenecks.
             </p>
-            <p className="text-gray-700">
-              Since launching, we've served thousands of happy customers across
-              Nigeria, from Lagos to Abuja, Port Harcourt to Kano. Our
-              commitment to quality, authenticity, and customer satisfaction has
-              made us a trusted name in the Nigerian football community.
+            <p>
+              We established a localized, rigorously filtered supply framework
+              to handle the sorting for you. Every patch placement, stitch
+              alignment, and heat-pressed material variant is manually verified
+              before it is indexed into our digital collection.
+            </p>
+            <p>
+              Today, we serve a growing grid of collectors, casual weekend
+              wearers, and local pitch purists spanning Lagos, Abuja, Port
+              Harcourt, and beyond. We don’t just ship jerseys—we manage kit
+              identity.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Why Choose Us */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl mb-4">Why Choose Us?</h2>
-            <p className="text-gray-600">
-              We're committed to providing the best experience for football fans
-            </p>
+      {/* 3. Core Pillars Value Grid */}
+      <section className="py-16 bg-gray-50/60 border-y border-gray-100/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-12">
+            <span className="text-[10px] font-bold tracking-widest uppercase text-gray-400 block mb-1.5">
+              Operations Standard
+            </span>
+            <h2 className="text-xl sm:text-2xl font-black tracking-tight text-gray-900">
+              Why Collectors Trust Our Vault
+            </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-lg border border-gray-200">
-              <div className="bg-black text-white p-3 rounded-lg w-fit mb-4">
-                <BadgeCheck className="w-6 h-6" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                icon: BadgeCheck,
+                title: "Player & Fan Spec Precision",
+                desc: "We prioritize authentic premium detailing, exact badging texture, and durability benchmarks that stand up to active pitch use and repetitive wash cycles.",
+              },
+              {
+                icon: Truck,
+                title: "Insured National Dispatch",
+                desc: "Fulfillment routes covering all 36 states safely. Every piece moves through reliable transit chains with real-time status visibility over our WhatsApp grid.",
+              },
+              {
+                icon: Shield,
+                title: "Strict Quality Guarantee",
+                desc: "Zero guessing games. If the structural print properties or sizing indexes don't align with what you ordered, we manage returns hassle-free within 2 days.",
+              },
+              {
+                icon: Heart,
+                title: "Built by Football Fanatics",
+                desc: "We verify typography, embroidery drop accuracy, and fabric weighting against original kit parameters because we wear them ourselves.",
+              },
+              {
+                icon: Star,
+                title: "The Retro & Current Catalog",
+                desc: "A constantly updating vault spanning elite current European drop configurations to classic vintage designs that are near impossible to locate elsewhere.",
+              },
+              {
+                icon: MapPin,
+                title: "Seamless Verification Loops",
+                desc: "No opaque systems. Everything connects straight into a clean checkout workflow that lets you audit specific customization parameters directly with dispatch handlers.",
+              },
+            ].map((pillar, i) => (
+              <div
+                key={i}
+                className="bg-white border border-gray-100 p-5 sm:p-6 rounded-2xl shadow-2xs space-y-4"
+              >
+                <div className="bg-black text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-xs">
+                  <pillar.icon className="w-4 h-4" />
+                </div>
+                <div className="space-y-1">
+                  <h3 className="text-xs font-bold uppercase tracking-wide text-gray-900">
+                    {pillar.title}
+                  </h3>
+                  <p className="text-xs text-gray-500 font-medium leading-relaxed">
+                    {pillar.desc}
+                  </p>
+                </div>
               </div>
-              <h3 className="text-xl font-semibold mb-2">
-                100% Authentic Quality
-              </h3>
-              <p className="text-gray-600">
-                We guarantee the authenticity of all our jerseys. Each item is
-                carefully inspected before shipping to ensure you get exactly
-                what you ordered.
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. The Structural Quality Audit Promise */}
+      <section className="py-16 md:py-24 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-black text-white rounded-2xl p-6 sm:p-10 relative overflow-hidden shadow-xs">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(50,50,50,0.4),transparent_60%)]" />
+
+          <div className="relative z-10 space-y-6">
+            <div>
+              <span className="text-[9px] font-bold tracking-widest uppercase text-gray-400 block mb-2">
+                Pre-Waybill Audit
+              </span>
+              <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white uppercase">
+                The Four-Point Quality Loop
+              </h2>
+              <p className="text-xs text-gray-400 mt-1 font-medium">
+                We don&apos;t authorize dispatch until a kit passes our physical
+                verification logs:
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-lg border border-gray-200">
-              <div className="bg-black text-white p-3 rounded-lg w-fit mb-4">
-                <Truck className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Fast Delivery</h3>
-              <p className="text-gray-600">
-                We deliver to all 36 states in Nigeria within 2-5 business days.
-                Track your order every step of the way through WhatsApp.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg border border-gray-200">
-              <div className="bg-black text-white p-3 rounded-lg w-fit mb-4">
-                <Shield className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Quality Guarantee</h3>
-              <p className="text-gray-600">
-                If you're not satisfied with your purchase, we offer hassle-free
-                returns within 7 days. Your satisfaction is our priority.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg border border-gray-200">
-              <div className="bg-black text-white p-3 rounded-lg w-fit mb-4">
-                <Heart className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Made for Fans</h3>
-              <p className="text-gray-600">
-                We're football fans just like you. We understand what you need
-                and ensure every jersey meets the standards we'd want for
-                ourselves.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg border border-gray-200">
-              <div className="bg-black text-white p-3 rounded-lg w-fit mb-4">
-                <Star className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Premium Selection</h3>
-              <p className="text-gray-600">
-                From current season jerseys to retro classics, we stock a wide
-                range of options from top clubs and national teams worldwide.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg border border-gray-200">
-              <div className="bg-black text-white p-3 rounded-lg w-fit mb-4">
-                <MapPin className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">
-                Nationwide Coverage
-              </h3>
-              <p className="text-gray-600">
-                No matter where you are in Nigeria, we'll deliver to your
-                doorstep. Reliable shipping partners across all states.
-              </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              {[
+                "Fabric density and tensile structural stitching verification.",
+                "Symmetry check on club badges and branding embroidery loops.",
+                "Thermal tracking and accuracy checks on requested player names/numbers.",
+                "Exact metric sizing checks against premium fitting standards.",
+              ].map((text, idx) => (
+                <div
+                  key={idx}
+                  className="flex gap-3 items-start bg-white/5 border border-white/5 p-3.5 rounded-xl"
+                >
+                  <CheckCircle2 className="w-4 h-4 text-white shrink-0 mt-0.5" />
+                  <p className="text-xs text-gray-300 font-medium leading-relaxed">
+                    {text}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Quality Promise */}
-      <section className="py-16">
+      {/* 5. Logistics Transparency Node */}
+      <section className="py-16 bg-gray-50/50 border-t border-gray-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-black text-white p-8 md:p-12 rounded-2xl">
-            <h2 className="text-3xl md:text-4xl mb-4">Our Quality Promise</h2>
-            <div className="space-y-4 text-gray-300">
-              <p>
-                <strong className="text-white">Every jersey we sell</strong>{" "}
-                goes through a rigorous quality check process. We inspect:
-              </p>
-              <ul className="space-y-2 ml-6">
-                <li className="flex items-start">
-                  <span className="text-white mr-2">✓</span>
-                  <span>Fabric quality and stitching</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-white mr-2">✓</span>
-                  <span>Print and badge quality</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-white mr-2">✓</span>
-                  <span>Size accuracy and fit</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-white mr-2">✓</span>
-                  <span>Color authenticity</span>
-                </li>
-              </ul>
-              <p>
-                We don't waybill anything we wouldn't be proud to wear
-                ourselves. That's our promise to you.
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-white border border-gray-100 p-6 sm:p-8 rounded-2xl shadow-2xs">
+            <div className="md:col-span-5 space-y-2">
+              <span className="text-[10px] font-bold tracking-widest uppercase text-gray-400 block">
+                Hub Logistics
+              </span>
+              <h2 className="text-lg font-black tracking-tight text-gray-900 uppercase">
+                National Transit
+              </h2>
+              <p className="text-xs text-gray-500 font-medium leading-relaxed">
+                Our main packaging facilities route custom prints through
+                instant dispatch networks daily.
               </p>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Delivery Coverage */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl mb-4">Delivery Coverage</h2>
-            <p className="text-gray-600">
-              We deliver to all states across Nigeria
-            </p>
-          </div>
-
-          <div className="bg-white p-8 rounded-lg border border-gray-200">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              <div className="flex items-center space-x-2">
-                <MapPin className="w-4 h-4 text-gray-400" />
-                <span className="text-sm">Lagos</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <MapPin className="w-4 h-4 text-gray-400" />
-                <span className="text-sm">Abuja</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <MapPin className="w-4 h-4 text-gray-400" />
-                <span className="text-sm">Port Harcourt</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <MapPin className="w-4 h-4 text-gray-400" />
-                <span className="text-sm">Kano</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <MapPin className="w-4 h-4 text-gray-400" />
-                <span className="text-sm">Ibadan</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <MapPin className="w-4 h-4 text-gray-400" />
-                <span className="text-sm">Benin City</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <MapPin className="w-4 h-4 text-gray-400" />
-                <span className="text-sm">Kaduna</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <MapPin className="w-4 h-4 text-gray-400" />
-                <span className="text-sm">Enugu</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <MapPin className="w-4 h-4 text-gray-400" />
-                <span className="text-sm">& All States</span>
-              </div>
-            </div>
-
-            <div className="mt-6 pt-6 border-t border-gray-200">
-              <p className="text-sm text-gray-600">
-                <strong>Delivery Time:</strong> Same day for Lagos • 2-5 working
-                days for other states
-              </p>
-              <p className="text-sm text-gray-600 mt-2">
-                <strong>Delivery Fee:</strong> Calculated based on your location
-                (usually ₦1,500 - ₦5,000)
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Returns Policy */}
-      <section className="py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl mb-4">Returns & Exchange</h2>
-          </div>
-
-          <div className="bg-gray-50 p-8 rounded-lg">
-            <p className="text-gray-700 mb-4">
-              We want you to be completely satisfied with your purchase. If you
-              receive a jersey that doesn't meet your expectations, we offer:
-            </p>
-            <ul className="space-y-3 text-gray-700">
-              <li className="flex items-start">
-                <span className="text-black font-bold mr-2">•</span>
-                <span>
-                  <strong>2-day return window</strong> from the date of delivery
+            <div className="md:col-span-7 pt-4 md:pt-0 md:pl-6 md:border-l border-dashed border-gray-100 space-y-3 text-xs font-semibold text-gray-700">
+              <div className="flex justify-between items-center py-1.5 border-b border-gray-50">
+                <span className="text-gray-400 font-bold uppercase tracking-wider text-[10px]">
+                  Lagos Hub Matrix
                 </span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-black font-bold mr-2">•</span>
-                <span>
-                  <strong>Free exchange</strong> if you receive the wrong size
-                  or defective item
+                <span className="text-gray-900 font-black">
+                  Same Day / 24 Hours Max
                 </span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-black font-bold mr-2">•</span>
-                <span>
-                  <strong>Full refund</strong> if the item doesn't match the
-                  description
+              </div>
+              <div className="flex justify-between items-center py-1.5 border-b border-gray-50">
+                <span className="text-gray-400 font-bold uppercase tracking-wider text-[10px]">
+                  Tier-1 State Hubs (Abuja, PH, Ibadan)
                 </span>
-              </li>
-            </ul>
-            <p className="text-sm text-gray-600 mt-6">
-              Contact us on WhatsApp to initiate a return or exchange. Items
-              must be unworn with original tags attached.
-            </p>
+                <span className="text-gray-900 font-black">
+                  2 - 3 Business Days
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-1.5">
+                <span className="text-gray-400 font-bold uppercase tracking-wider text-[10px]">
+                  Regional Delivery Outposts
+                </span>
+                <span className="text-gray-900 font-black">
+                  3 - 5 Business Days
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </section>

@@ -38,410 +38,250 @@ export const NIGERIAN_STATES = [
   "Zamfara",
 ];
 
-export const allProducts = [
+export const JERSEY_FEATURES = [
+  "Premium Thai Grade A+ Quality",
+  "Moisture-Wicking Breathable Knit",
+  "High-Density Embroidered Crest",
+  "Tailored Athletic Fit",
+];
+
+export const productSummaries = [
   {
-    id: 1,
+    id: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
     name: "Manchester United Home",
-    team: "Man United",
     league: "EPL",
     season: "2024/25",
-    price: 15000,
-    image:
+    priceInKobo: 1500000,
+    images: [
       "https://images.unsplash.com/photo-1662096909714-e2f206d0a636?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYW5jaGVzdGVyJTIwdW5pdGVkJTIwamVyc2V5fGVufDF8fHx8MTc3MDI4OTM1MHww&ixlib=rb-4.1.0&q=80&w=1080",
+    ],
+    stock: 4,
   },
   {
-    id: 2,
+    id: "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed",
     name: "Arsenal Home",
-    team: "Arsenal",
     league: "EPL",
     season: "2024/25",
-    price: 15000,
-    image:
+    priceInKobo: 1500000,
+    images: [
       "https://images.unsplash.com/photo-1641570882851-72738e6e98ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnNlbmFsJTIwZm9vdGJhbGwlMjBqZXJzZXl8ZW58MXx8fHwxNzcwMjg5MzUxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+    ],
+    stock: 12,
   },
   {
-    id: 3,
+    id: "2c9f6d1a-4d2b-4e8c-8f3a-9b1c7d5e2f3d",
     name: "Barcelona Home",
-    team: "Barcelona",
     league: "La Liga",
     season: "2024/25",
-    price: 15000,
-    image:
+    priceInKobo: 1500000,
+    images: [
       "https://images.unsplash.com/photo-1731335262206-60fc90a7a4e8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiYXJjZWxvbmElMjBmb290YmFsbCUyMGplcnNleXxlbnwxfHx8fDE3NzAxOTM4NTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+    ],
+    stock: 0,
   },
   {
-    id: 4,
+    id: "3d5e2f7b-1a9c-4d8e-9b3f-5c2d1e8b7a6f",
     name: "Real Madrid Home",
-    team: "Real Madrid",
     league: "La Liga",
     season: "2024/25",
-    price: 15000,
-    image:
-      "https://images.unsplash.com/photo-1760551733698-8e4a497d40d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZWFsJTIwbWFkcmlkJTIwZm9vdGJhbGwlMjBqZXJzZXl8ZW58MXx8fHwxNzcwMjg5MzUwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+    priceInKobo: 1500000,
+    images: [
+      "https://images.unsplash.com/photo-1760551733698-8e4a497d40d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZWFsJTIwbWFkcmlkJTIwZm9vdGJhbGwlMjBqZXJzZXl8ZW58MXx8fHwxNzcwMjg5MzcwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+    ],
+    stock: 8,
   },
   {
-    id: 5,
+    id: "4f8a2c1e-9d3b-4c5e-8b7f-1a2b3c4d5e6f",
     name: "Nigeria Home",
-    team: "Nigeria",
     league: "National",
     season: "2024",
-    price: 16000,
-    image:
+    priceInKobo: 1600000,
+    images: [
       "https://images.unsplash.com/photo-1649615353267-992042e18593?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuaWdlcmlhJTIwZm9vdGJhbGwlMjBqZXJzZXl8ZW58MXx8fHwxNzcwMjg5MzUxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+    ],
+    stock: 15,
   },
   {
-    id: 6,
+    id: "5e7b2a1c-3d4e-4f8a-9b2c-1d3e5f7a9b1c",
     name: "Brazil Home",
-    team: "Brazil",
     league: "National",
     season: "2024",
-    price: 16000,
-    image:
+    priceInKobo: 1600000,
+    images: [
       "https://images.unsplash.com/photo-1551854415-1df5f0d94b99?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxicmF6aWwlMjBmb290YmFsbCUyMGplcnNleXxlbnwxfHx8fDE3NzAyODkzNTF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+    ],
+    stock: 2,
   },
   {
-    id: 7,
+    id: "6d2f1e8a-7b3c-4e5d-9a1b-2c3d4e5f6a7b",
     name: "Classic Retro Jersey",
-    team: "Vintage",
     league: "Retro",
     season: "90s",
-    price: 18000,
-    image:
+    priceInKobo: 1800000,
+    images: [
       "https://images.unsplash.com/photo-1759447946445-397b1c034768?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZXRybyUyMGZvb3RiYWxsJTIwamVyc2V5fGVufDF8fHx8MTc3MDI4OTM1Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+    ],
+    stock: 5,
   },
   {
-    id: 8,
+    id: "7a1b3c5e-2f4d-4e8c-9b3f-6c1d2e8b7a9f",
     name: "Premier League Special",
-    team: "Various",
     league: "EPL",
     season: "2024/25",
-    price: 15000,
-    image:
+    priceInKobo: 1500000,
+    images: [
       "https://images.unsplash.com/photo-1662096909687-7c64cde3524b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcmVtaWVyJTIwbGVhZ3VlJTIwZm9vdGJhbGwlMjBqZXJzZXl8ZW58MXx8fHwxNzcwMjg5MzQ5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+    ],
+    stock: 24,
   },
 ];
 
-export const products = [
+export const productDetails = [
   {
-    id: 1,
+    id: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
     name: "Manchester United Home Jersey",
     team: "Manchester United",
     league: "Premier League",
-    season: "2024/25",
-    price: 15000,
+    season: "2025/26",
+    priceInKobo: 1500000,
+    stock: 18,
+    isActive: true,
+    type: "current" as const,
     description:
-      "Official Manchester United home jersey for the 2024/25 season.",
-    fullDescription:
-      "Premium Manchester United home jersey with breathable fabric and iconic red design.",
+      "Manchester United Home football shirt from the 2025/26 Premier League season. Features the iconic club crest, sponsor branding, and advanced performance moisture-wicking fabric.",
     images: [
-      "https://images.unsplash.com/photo-1662096909714-e2f206d0a636",
-      "https://images.unsplash.com/photo-1772474659559-7d009fef11df",
-      "https://images.unsplash.com/photo-1660304755591-8c5ca028f8ee",
-    ],
-    features: [
-      "Premium quality",
-      "Breathable fabric",
-      "Durable",
-      "Perfect fit",
+      "https://images.unsplash.com/photo-1662096909714-e2f206d0a636?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80",
     ],
   },
   {
-    id: 2,
+    id: "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed",
     name: "Arsenal Home Jersey",
     team: "Arsenal",
     league: "Premier League",
-    season: "2024/25",
-    price: 15000,
-    description: "Classic Arsenal red and white home jersey.",
-    fullDescription:
-      "High-performance Arsenal jersey designed for comfort and style.",
+    season: "2005/06",
+    priceInKobo: 2500000,
+    stock: 14,
+    isActive: true,
+    type: "retro" as const,
+    description:
+      "Arsenal Home football shirt from the 2005/06 Premier League season, celebrating the final legendary campaign at Highbury Stadium. Rare commemorative redcurrant edition with gold embroidery.",
     images: [
-      "https://images.unsplash.com/photo-1641570882851-72738e6e98ee",
-      "https://images.unsplash.com/photo-1695141683703-72ff11f64051",
-      "https://images.unsplash.com/photo-1660304755591-8c5ca028f8ee",
-    ],
-    features: [
-      "Premium quality",
-      "Breathable fabric",
-      "Durable",
-      "Perfect fit",
+      "https://images.unsplash.com/photo-1641570882851-72738e6e98ee?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1577223625856-75891279c27a?w=800&auto=format&fit=crop&q=80",
     ],
   },
   {
-    id: 3,
+    id: "2c9f6d1a-4d2b-4e8c-8f3a-9b1c7d5e2f3d",
     name: "Barcelona Home Jersey",
     team: "Barcelona",
     league: "La Liga",
     season: "2024/25",
-    price: 15000,
-    description: "Iconic Blaugrana striped jersey.",
-    fullDescription:
-      "Barcelona jersey crafted for fans who value style and performance.",
+    priceInKobo: 1800000,
+    stock: 0,
+    isActive: true,
+    type: "modern" as const,
+    description:
+      "Barcelona Home football shirt from the 2024/25 La Liga campaign. Centered split Blaugrana design paying homage to heritage layouts with a modern elite athletic construction.",
     images: [
-      "https://images.unsplash.com/photo-1731335262206-60fc90a7a4e8",
-      "https://images.unsplash.com/photo-1764116679116-759d9e02c88d",
-      "https://images.unsplash.com/photo-1660304755591-8c5ca028f8ee",
-    ],
-    features: [
-      "Premium quality",
-      "Breathable fabric",
-      "Durable",
-      "Perfect fit",
+      "https://images.unsplash.com/photo-1731335262206-60fc90a7a4e8?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1551958219-acbc608c6377?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=800&auto=format&fit=crop&q=80",
     ],
   },
   {
-    id: 4,
+    id: "3d5e2f7b-1a9c-4d8e-9b3f-5c2d1e8b7a6f",
     name: "Real Madrid Home Jersey",
     team: "Real Madrid",
     league: "La Liga",
-    season: "2024/25",
-    price: 15000,
-    description: "Classic white Real Madrid jersey.",
-    fullDescription: "Elegant and performance-driven Real Madrid jersey.",
+    season: "2025/26",
+    priceInKobo: 1500000,
+    stock: 25,
+    isActive: true,
+    type: "current" as const,
+    description:
+      "Real Madrid Home football shirt from the 2025/26 La Liga season. Minimalist signature pristine all-white design featuring houndstooth pattern detail integrated into the kit layout.",
     images: [
-      "https://images.unsplash.com/photo-1760551733698-8e4a497d40d4",
-      "https://images.unsplash.com/photo-1760551732733-9ac6be2c0e39",
-      "https://images.unsplash.com/photo-1695141683703-72ff11f64051",
-    ],
-    features: [
-      "Premium quality",
-      "Breathable fabric",
-      "Durable",
-      "Perfect fit",
+      "https://images.unsplash.com/photo-1760551733698-8e4a497d40d4?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1518063319789-7217e6706b04?w=800&auto=format&fit=crop&q=80",
     ],
   },
   {
-    id: 5,
+    id: "4f8a2c1e-9d3b-4c5e-8b7f-1a2b3c4d5e6f",
     name: "Chelsea Home Jersey",
     team: "Chelsea",
     league: "Premier League",
-    season: "2024/25",
-    price: 15000,
-    description: "Blue Chelsea home jersey.",
-    fullDescription: "Comfortable Chelsea jersey built for everyday wear.",
+    season: "2012/13",
+    priceInKobo: 2200000,
+    stock: 9,
+    isActive: true,
+    type: "retro" as const,
+    description:
+      "Chelsea Home football shirt from the historical 2012/13 season. Famous royal blue layout with premium gold accent stripes commemorating continental championship achievements.",
     images: [
-      "https://images.unsplash.com/photo-1600180758890-6f8c4bb0e6c7",
-      "https://images.unsplash.com/photo-1600180758734-0b7d63c8799a",
-      "https://images.unsplash.com/photo-1660304755591-8c5ca028f8ee",
-    ],
-    features: [
-      "Premium quality",
-      "Breathable fabric",
-      "Durable",
-      "Perfect fit",
+      "https://images.unsplash.com/photo-1563299796-17596ed6b017?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1510566337590-2fc1f21d0faa?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1516567727245-ad8c68f3ec93?w=800&auto=format&fit=crop&q=80",
     ],
   },
   {
-    id: 6,
+    id: "5e7b2a1c-3d4e-4f8a-9b2c-1d3e5f7a9b1c",
     name: "Liverpool Home Jersey",
     team: "Liverpool",
     league: "Premier League",
-    season: "2024/25",
-    price: 15000,
-    description: "Liverpool red home jersey.",
-    fullDescription: "Show your support with this stylish Liverpool jersey.",
+    season: "2025/26",
+    priceInKobo: 1500000,
+    stock: 31,
+    isActive: true,
+    type: "current" as const,
+    description:
+      "Liverpool Home football shirt from the 2025/26 Premier League campaign. Traditional striking dark red pattern combined with streamlined ergonomic design lines.",
     images: [
-      "https://images.unsplash.com/photo-1600180758890-6f8c4bb0e6c7",
-      "https://images.unsplash.com/photo-1600180758734-0b7d63c8799a",
-      "https://images.unsplash.com/photo-1695141683703-72ff11f64051",
-    ],
-    features: [
-      "Premium quality",
-      "Breathable fabric",
-      "Durable",
-      "Perfect fit",
+      "https://images.unsplash.com/photo-1556816214-da1671340fed?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1543351611-58f69d7c1781?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1504305754058-2f08ccd89a0a?w=800&auto=format&fit=crop&q=80",
     ],
   },
   {
-    id: 7,
+    id: "6d2f1e8a-7b3c-4e5d-9a1b-2c3d4e5f6a7b",
     name: "Bayern Munich Home Jersey",
     team: "Bayern Munich",
     league: "Bundesliga",
     season: "2024/25",
-    price: 15000,
-    description: "Bayern Munich red jersey.",
-    fullDescription: "Premium Bayern Munich jersey with excellent comfort.",
+    priceInKobo: 1800000,
+    stock: 16,
+    isActive: true,
+    type: "modern" as const,
+    description:
+      "Bayern Munich Home football shirt from the 2024/25 Bundesliga run. Dynamic Triple-Red variant detailing reflecting the heart of Bavarian structural club pride.",
     images: [
-      "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80",
-      "https://images.unsplash.com/photo-1624378439576-4e98d9c5a9c7",
-      "https://images.unsplash.com/photo-1660304755591-8c5ca028f8ee",
-    ],
-    features: [
-      "Premium quality",
-      "Breathable fabric",
-      "Durable",
-      "Perfect fit",
+      "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1431324155629-1a6edd1d141d?w=800&auto=format&fit=crop&q=80",
     ],
   },
   {
-    id: 8,
+    id: "7a1b3c5e-2f4d-4e8c-9b3f-6c1d2e8b7a9f",
     name: "PSG Home Jersey",
     team: "Paris Saint-Germain",
     league: "Ligue 1",
-    season: "2024/25",
-    price: 15000,
-    description: "PSG navy home jersey.",
-    fullDescription: "Modern PSG jersey combining performance and style.",
+    season: "2025/26",
+    priceInKobo: 1500000,
+    stock: 20,
+    isActive: true,
+    type: "current" as const,
+    description:
+      "Paris Saint-Germain Home football shirt from the 2025/26 Ligue 1 layout. Parisian midnight navy identity offset by a brushstroke interpretation of the classic red Hechter striping.",
     images: [
-      "https://images.unsplash.com/photo-1599058917212-d750089bc07e",
-      "https://images.unsplash.com/photo-1599058917313-2c1c2b6d7c6f",
-      "https://images.unsplash.com/photo-1695141683703-72ff11f64051",
-    ],
-    features: [
-      "Premium quality",
-      "Breathable fabric",
-      "Durable",
-      "Perfect fit",
+      "https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1509256966099-e1b119c051f6?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1519766304817-4f37bda74a27?w=800&auto=format&fit=crop&q=80",
     ],
   },
-  {
-    id: 9,
-    name: "Juventus Home Jersey",
-    team: "Juventus",
-    league: "Serie A",
-    season: "2024/25",
-    price: 15000,
-    description: "Black and white Juventus jersey.",
-    fullDescription: "Classic Juventus stripes with modern comfort.",
-    images: [
-      "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80",
-      "https://images.unsplash.com/photo-1624378439576-4e98d9c5a9c7",
-      "https://images.unsplash.com/photo-1660304755591-8c5ca028f8ee",
-    ],
-    features: [
-      "Premium quality",
-      "Breathable fabric",
-      "Durable",
-      "Perfect fit",
-    ],
-  },
-  {
-    id: 10,
-    name: "AC Milan Home Jersey",
-    team: "AC Milan",
-    league: "Serie A",
-    season: "2024/25",
-    price: 15000,
-    description: "Red and black Milan jersey.",
-    fullDescription: "Stylish AC Milan jersey for passionate fans.",
-    images: [
-      "https://images.unsplash.com/photo-1599058917212-d750089bc07e",
-      "https://images.unsplash.com/photo-1599058917313-2c1c2b6d7c6f",
-      "https://images.unsplash.com/photo-1695141683703-72ff11f64051",
-    ],
-    features: [
-      "Premium quality",
-      "Breathable fabric",
-      "Durable",
-      "Perfect fit",
-    ],
-  },
-  {
-    id: 11,
-    name: "Inter Milan Home Jersey",
-    team: "Inter Milan",
-    league: "Serie A",
-    season: "2024/25",
-    price: 15000,
-    description: "Inter Milan striped jersey.",
-    fullDescription: "Modern Inter Milan jersey with premium feel.",
-    images: [
-      "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80",
-      "https://images.unsplash.com/photo-1624378439576-4e98d9c5a9c7",
-      "https://images.unsplash.com/photo-1660304755591-8c5ca028f8ee",
-    ],
-    features: [
-      "Premium quality",
-      "Breathable fabric",
-      "Durable",
-      "Perfect fit",
-    ],
-  },
-  {
-    id: 12,
-    name: "Tottenham Home Jersey",
-    team: "Tottenham",
-    league: "Premier League",
-    season: "2024/25",
-    price: 15000,
-    description: "White Tottenham jersey.",
-    fullDescription: "Clean and stylish Spurs jersey.",
-    images: [
-      "https://images.unsplash.com/photo-1600180758890-6f8c4bb0e6c7",
-      "https://images.unsplash.com/photo-1600180758734-0b7d63c8799a",
-      "https://images.unsplash.com/photo-1695141683703-72ff11f64051",
-    ],
-    features: [
-      "Premium quality",
-      "Breathable fabric",
-      "Durable",
-      "Perfect fit",
-    ],
-  },
-  {
-    id: 13,
-    name: "Borussia Dortmund Jersey",
-    team: "Dortmund",
-    league: "Bundesliga",
-    season: "2024/25",
-    price: 15000,
-    description: "Yellow Dortmund jersey.",
-    fullDescription: "Bright and bold Dortmund jersey.",
-    images: [
-      "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80",
-      "https://images.unsplash.com/photo-1624378439576-4e98d9c5a9c7",
-      "https://images.unsplash.com/photo-1660304755591-8c5ca028f8ee",
-    ],
-    features: [
-      "Premium quality",
-      "Breathable fabric",
-      "Durable",
-      "Perfect fit",
-    ],
-  },
-  {
-    id: 14,
-    name: "Atletico Madrid Jersey",
-    team: "Atletico Madrid",
-    league: "La Liga",
-    season: "2024/25",
-    price: 15000,
-    description: "Red striped Atletico jersey.",
-    fullDescription: "Tough and stylish Atletico Madrid jersey.",
-    images: [
-      "https://images.unsplash.com/photo-1731335262206-60fc90a7a4e8",
-      "https://images.unsplash.com/photo-1764116679116-759d9e02c88d",
-      "https://images.unsplash.com/photo-1695141683703-72ff11f64051",
-    ],
-    features: [
-      "Premium quality",
-      "Breathable fabric",
-      "Durable",
-      "Perfect fit",
-    ],
-  },
-  {
-    id: 15,
-    name: "Napoli Home Jersey",
-    team: "Napoli",
-    league: "Serie A",
-    season: "2024/25",
-    price: 15000,
-    description: "Napoli blue jersey.",
-    fullDescription: "Smooth Napoli jersey with modern design.",
-    images: [
-      "https://images.unsplash.com/photo-1599058917212-d750089bc07e",
-      "https://images.unsplash.com/photo-1599058917313-2c1c2b6d7c6f",
-      "https://images.unsplash.com/photo-1660304755591-8c5ca028f8ee",
-    ],
-    features: [
-      "Premium quality",
-      "Breathable fabric",
-      "Durable",
-      "Perfect fit",
-    ],
-  },
-];
+] as const;
 
 export type CurrencyCode = "NGN" | "GBP" | "USD" | "EUR";
 
@@ -479,8 +319,8 @@ export const faqs = [
 ];
 
 export const DELIVERY_FEES: Record<string, number> = {
-  Lagos: 2000,
-  Ogun: 2500,
+  Lagos: 3000,
+  Ogun: 3000,
   Oyo: 3000,
   Osun: 3500,
   FCT: 3000,
@@ -523,40 +363,48 @@ export const AVAILABLE_JERSEY_SIZES = ["L", "XL", "XXL"];
 
 export const bestSellers = [
   {
-    id: 1,
+    id: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
     name: "Manchester United Home",
-    team: "Man United",
+    league: "EPL",
     season: "2024/25",
-    price: "₦15,000",
-    image:
+    priceInKobo: 1500000,
+    images: [
       "https://images.unsplash.com/photo-1662096909714-e2f206d0a636?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYW5jaGVzdGVyJTIwdW5pdGVkJTIwamVyc2V5fGVufDF8fHx8MTc3MDI4OTM1MHww&ixlib=rb-4.1.0&q=80&w=1080",
+    ],
+    stock: 4,
   },
   {
-    id: 2,
+    id: "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed",
     name: "Arsenal Home",
-    team: "Arsenal",
+    league: "EPL",
     season: "2024/25",
-    price: "₦15,000",
-    image:
+    priceInKobo: 1500000,
+    images: [
       "https://images.unsplash.com/photo-1641570882851-72738e6e98ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnNlbmFsJTIwZm9vdGJhbGwlMjBqZXJzZXl8ZW58MXx8fHwxNzcwMjg5MzUxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+    ],
+    stock: 12,
   },
   {
-    id: 3,
+    id: "2c9f6d1a-4d2b-4e8c-8f3a-9b1c7d5e2f3d",
     name: "Barcelona Home",
-    team: "Barcelona",
+    league: "La Liga",
     season: "2024/25",
-    price: "₦15,000",
-    image:
+    priceInKobo: 1500000,
+    images: [
       "https://images.unsplash.com/photo-1731335262206-60fc90a7a4e8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiYXJjZWxvbmElMjBmb290YmFsbCUyMGplcnNleXxlbnwxfHx8fDE3NzAxOTM4NTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+    ],
+    stock: 0,
   },
   {
-    id: 4,
+    id: "3d5e2f7b-1a9c-4d8e-9b3f-5c2d1e8b7a6f",
     name: "Real Madrid Home",
-    team: "Real Madrid",
+    league: "La Liga",
     season: "2024/25",
-    price: "₦15,000",
-    image:
-      "https://images.unsplash.com/photo-1760551733698-8e4a497d40d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZWFsJTIwbWFkcmlkJTIwZm9vdGJhbGwlMjBqZXJzZXl8ZW58MXx8fHwxNzcwMjg5MzUwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+    priceInKobo: 1500000,
+    images: [
+      "https://images.unsplash.com/photo-1760551733698-8e4a497d40d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZWFsJTIwbWFkcmlkJTIwZm9vdGJhbGwlMjBqZXJzZXl8ZW58MXx8fHwxNzcwMjg5MzcwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+    ],
+    stock: 8,
   },
 ];
 
@@ -565,7 +413,7 @@ export const leagues = [
     name: "Premier League",
     image:
       "https://images.unsplash.com/photo-1662096909687-7c64cde3524b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcmVtaWVyJTIwbGVhZ3VlJTIwZm9vdGJhbGwlMjBqZXJzZXl8ZW58MXx8fHwxNzcwMjg5MzQ5fDA&ixlib=rb-4.1.0&q=80&w=1080",
-    filter: "EPL",
+    filter: "Premier League",
   },
   {
     name: "La Liga",
@@ -577,12 +425,19 @@ export const leagues = [
     name: "National Teams",
     image:
       "https://images.unsplash.com/photo-1649615353267-992042e18593?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuaWdlcmlhJTIwZm9vdGJhbGwlMjBqZXJzZXl8ZW58MXx8fHwxNzcwMjg5MzUxfDA&ixlib=rb-4.1.0&q=80&w=1080",
-    filter: "National",
+    filter: "National Teams",
   },
   {
-    name: "Retro Classics",
+    name: "Others",
     image:
       "https://images.unsplash.com/photo-1759447946445-397b1c034768?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZXRybyUyMGZvb3RiYWxsJTIwamVyc2V5fGVufDF8fHx8MTc3MDI4OTM1Mnww&ixlib=rb-4.1.0&q=80&w=1080",
-    filter: "Retro",
+    filter: "Others",
   },
 ];
+
+export const VERSION_UPCHARGE_KOBO = 1000_000;
+
+// While you are here, you can centralize your other printing fees too:
+export const CUSTOM_PRINT_1_2_DIGITS_KOBO = 500000;
+export const CUSTOM_PRINT_3_DIGITS_KOBO = 600000;
+export const MINIMUM_DELIVERY_FEE = 3000;
