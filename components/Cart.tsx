@@ -11,7 +11,7 @@ import { useCart } from "@/context/CartContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { EditCartItemSheet } from "../EditCartItemSheet";
+import { EditCartItemSheet } from "./EditCartItemSheet";
 
 export function Cart() {
   const router = useRouter();
