@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ICartItem, useCart } from "@/context/CartContext";
+import { useCart } from "@/context/CartContext";
 import Image from "next/image";
 import {
   AVAILABLE_JERSEY_SIZES,
