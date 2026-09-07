@@ -1,4 +1,4 @@
-import { Cart } from "@/components/ui/Cart";
+import { Cart } from "@/components/Cart";
 
 const CartPage = () => {
   return <Cart />;
