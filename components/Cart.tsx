@@ -15,8 +15,14 @@ import { EditCartItemSheet } from "./EditCartItemSheet";
 
 export function Cart() {
   const router = useRouter();
-  const { cartItems, subtotal, editingItem, setEditingItem, removeItem } =
-    useCart();
+  const {
+    cartItems,
+    subtotal,
+    editingItem,
+    setEditingItem,
+    removeItem,
+    clearCart,
+  } = useCart();
 
   if (cartItems.length === 0) {
     return (
@@ -65,10 +71,19 @@ export function Cart() {
             {/* LEFT: Cart Items List */}
             <div className="lg:col-span-7">
               <div className="border border-gray-100 rounded-2xl bg-white shadow-2xs overflow-hidden">
-                <div className="p-5 border-b border-gray-100/60 bg-gray-50/40">
+                <div className="p-5 border-b border-gray-100/60 bg-gray-50/40 flex items-center justify-between">
                   <h2 className="text-sm font-bold text-gray-900">
                     Selected Team Kits ({cartItems.length})
                   </h2>
+                  {cartItems.length > 0 && (
+                    <button
+                      onClick={clearCart}
+                      className="text-xs font-semibold text-gray-500 hover:text-red-600 transition-colors flex items-center gap-1 cursor-pointer"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Clear All</span>
+                    </button>
+                  )}
                 </div>
                 <div className="divide-y divide-gray-100 px-5">
                   {cartItems.map((item, index) => (
