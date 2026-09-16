@@ -7,7 +7,6 @@ const getSessionUserId = async (): Promise<Result<string>> => {
     const session = await auth.api.getSession({ headers: await headers() });
 
     if (!session?.user?.id) {
-      // Expected: no session. Not a bug — a normal, anticipated state.
       throw new AppError("UNAUTHENTICATED", "Please sign in to continue");
     }
 
