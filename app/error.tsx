@@ -2,6 +2,7 @@
 
 import * as Sentry from "@sentry/nextjs";
 import { RotateCcw, AlertTriangle } from "lucide-react";
+import { useEffect } from "react";
 
 interface ErrorProps {
   error: Error & { digest?: string };
@@ -9,12 +10,15 @@ interface ErrorProps {
 }
 
 export default function GlobalErrorBoundary({ error, reset }: ErrorProps) {
-  // captureException is synchronous — no useEffect or useState needed
-  const eventId = Sentry.captureException(error);
+  useEffect(() => {
+    Sentry.captureException(error, {
+      tags: { boundary: "app/error.tsx" },
+    });
+  }, [error]);
 
-  //   if (process.env.NODE_ENV !== "production") {
-  //     console.error("Caught by Global Error Boundary:", error);
-  //   }
+  if (process.env.NODE_ENV !== "production") {
+    console.error("Caught by Global Error Boundary:", error);
+  }
 
   return (
     <main className="h-screen w-full bg-white text-neutral-900 px-4 py-8 flex items-center justify-center overflow-hidden">
@@ -26,9 +30,6 @@ export default function GlobalErrorBoundary({ error, reset }: ErrorProps) {
 
         {/* Main Content */}
         <div className="space-y-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-amber-600">
-            Unexpected Error
-          </span>
           <h1 className="text-3xl font-bold tracking-tight text-neutral-900">
             Something went wrong
           </h1>
@@ -36,18 +37,6 @@ export default function GlobalErrorBoundary({ error, reset }: ErrorProps) {
             We ran into an issue loading this page. Please try refreshing or
             reloading the page.
           </p>
-
-          {/* Reference Tag */}
-          {eventId && (
-            <div className="inline-block pt-2">
-              <div className="bg-neutral-100 border border-neutral-200 rounded-lg px-4 py-2 font-mono text-xs text-neutral-700">
-                Error Reference:{" "}
-                <span className="font-bold text-neutral-950 select-all">
-                  {eventId}
-                </span>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Action Button */}
