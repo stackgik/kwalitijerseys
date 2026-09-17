@@ -3,11 +3,7 @@
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
 import Image from "next/image";
-import {
-  AVAILABLE_JERSEY_SIZES,
-  productDetails,
-  VERSION_UPCHARGE_KOBO,
-} from "@/constant";
+import { AVAILABLE_JERSEY_SIZES, VERSION_UPCHARGE_KOBO } from "@/constant";
 import { Plus, Minus } from "lucide-react";
 import SideSheet from "./SideSheet";
 import formatCurrency from "@/helper/formatCurrency";
@@ -16,13 +12,12 @@ interface EditCartItemDialogProps {
   item: ICartItem | null;
 }
 
-const EditCartForm = ({
-  item,
-  closeSheet,
-}: {
+interface IEditCartForm {
   item: ICartItem;
   closeSheet: () => void;
-}) => {
+}
+
+const EditCartForm = ({ item, closeSheet }: IEditCartForm) => {
   const { updateItem } = useCart();
 
   const [size, setSize] = useState(item.size || "");
@@ -44,16 +39,9 @@ const EditCartForm = ({
     return customNumber.trim().length >= 3 ? 6000 : 5000;
   };
 
-  const product = productDetails.find((prod) => prod.id === item.productId);
-  if (!product) {
-    alert("something went wrong");
-    return;
-  }
-  const pristinePriceInKobo = product.priceInKobo;
+  const pristinePriceInKobo = item.priceInKobo;
 
   const handleSave = () => {
-    console.log(item.priceInKobo);
-
     const basePrice =
       version === "fan"
         ? pristinePriceInKobo
@@ -75,8 +63,6 @@ const EditCartForm = ({
           }
         : { customization: undefined }),
     };
-
-    // console.log(updatedItem);
 
     updateItem(item.cartItemId, updatedItem);
     closeSheet();
@@ -278,9 +264,8 @@ const EditCartForm = ({
 };
 
 // 2. The structural wrapper passes down an item specific key string
-export function EditCartItemSheet({
-  item: editingItem,
-}: EditCartItemDialogProps) {
+// prettier-ignore
+export function EditCartItemSheet({ item: editingItem }: EditCartItemDialogProps) {
   const { setEditingItem, editingItem: contextEditingItem } = useCart();
   const item = editingItem || contextEditingItem;
 
