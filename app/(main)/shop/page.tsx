@@ -2,6 +2,7 @@ import { Shop } from "@/components/Shop";
 import { getFilteredJerseys, getWishlistIds } from "../../actions/products";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { handleActionError } from "@/lib/error";
 
 type searchParamsProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -12,7 +13,13 @@ const ShopPage = async ({ searchParams }: searchParamsProps) => {
   const pendingWishlistId =
     typeof params.wishlist === "string" ? params.wishlist : null;
 
-  const session = await auth.api.getSession({ headers: await headers() });
+  let session;
+
+  try {
+    session = await auth.api.getSession({ headers: await headers() });
+  } catch (error) {
+    return handleActionError(error, "getSession/ShopPage");
+  }
 
   // Extract search params safely as strings for the server action
   const rawFilters = {
