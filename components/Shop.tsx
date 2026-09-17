@@ -15,7 +15,7 @@ type PaginationMeta = {
 };
 
 type ShopProps = {
-  products: IProductProps[];
+  products: IProduct[];
   pagination: PaginationMeta;
   wishlistIds: string[];
   pendingWishlistId: string | null;
