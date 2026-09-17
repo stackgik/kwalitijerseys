@@ -29,33 +29,34 @@ declare global {
     }[];
   }
 
-  interface IProductData {
+  type League =
+    | "Premier League"
+    | "La Liga"
+    | "Serie A"
+    | "Bundesliga"
+    | "Ligue 1"
+    | "National Teams"
+    | "Others";
+
+  type JerseyType = "retro" | "current" | "modern";
+
+  interface IProduct {
     id: string;
     name: string;
-    league: string;
+    league: League;
     season: string;
-    priceInKobo: number;
+    price_in_kobo?: number;
+    priceInKobo?: number;
     images: string[];
     stock: number;
-    type: "current" | "modern" | "retro";
+    type?: JerseyType;
+    createdAt: Date | string;
   }
 
-  interface IProductProps {
-    id: string;
-    name: string;
-    league:
-      | "Premier League"
-      | "La Liga"
-      | "Serie A"
-      | "Bundesliga"
-      | "Ligue 1"
-      | "National Teams"
-      | "Others";
-    season: string;
-    priceInKobo: number;
-    images: string[];
-    createdAt: Date | string;
-    stock: number;
+  interface IPagination {
+    limit: number;
+    total: number;
+    totalPages: number;
   }
 
   interface ICartItem {
