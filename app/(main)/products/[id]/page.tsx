@@ -2,7 +2,6 @@ import { getProductDetails, getProducts } from "@/app/actions/products";
 import { ProductDetail } from "@/components/ProductDetails";
 import ProductNotFound from "@/components/ProductNotFound";
 
-// Next.js 15+ typed params as a Promise
 interface PageProps {
   params: Promise<{ id: string }>;
 }
@@ -10,19 +9,20 @@ interface PageProps {
 const ProductDetailsPage = async ({ params }: PageProps) => {
   const { id } = await params;
 
-  const [productDetails, products] = await Promise.all([
+  // This returns either an AppError object or data Object.
+  const [productDetailsRes, productsRes] = await Promise.all([
     getProductDetails(id),
     getProducts(),
   ]);
 
-  if (!productDetails || !products) {
+  if (!productDetailsRes.success || !productsRes.success) {
     return <ProductNotFound />;
   }
 
   return (
     <ProductDetail
-      productDetails={productDetails}
-      products={products}
+      productDetails={productDetailsRes.data}
+      products={productsRes.data}
       currentProductId={id}
     />
   );
