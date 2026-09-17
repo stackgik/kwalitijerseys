@@ -4,31 +4,38 @@ import { and, asc, eq, sql } from "drizzle-orm"; // 💡 Import 'sql'
 import { db, pool } from "../db";
 import { productImages, products, wishlistItems } from "../db/schema";
 import { getSessionUserId } from "./auth";
+import { AppError, handleActionError, Result } from "@/lib/error";
 
-const getProducts = async () => {
-  const res = await db
-    .select({
-      id: products.id,
-      name: products.name,
-      league: products.league,
-      season: products.season,
-      priceInKobo: products.priceInKobo,
-      stock: products.stock,
-      type: products.type,
-      createdAt: products.createdAt,
-      images: sql<
-        string[]
-      >`array_agg(${productImages.url} ORDER BY ${productImages.order} ASC)`,
-    })
-    .from(products)
-    .leftJoin(productImages, eq(products.id, productImages.productId))
-    .where(eq(products.isActive, true))
-    .groupBy(products.id);
+const getProducts = async (): Promise<Result<IProduct[]>> => {
+  try {
+    const res = await db
+      .select({
+        id: products.id,
+        name: products.name,
+        league: products.league,
+        season: products.season,
+        priceInKobo: products.priceInKobo,
+        stock: products.stock,
+        type: products.type,
+        createdAt: products.createdAt,
+        images: sql<
+          string[]
+        >`array_agg(${productImages.url} ORDER BY ${productImages.order} ASC)`,
+      })
+      .from(products)
+      .leftJoin(productImages, eq(products.id, productImages.productId))
+      .where(eq(products.isActive, true))
+      .groupBy(products.id);
 
-  return res;
+    return { success: true, data: res };
+  } catch (error) {
+    return handleActionError(error, "getProducts");
+  }
 };
 
-const getFilteredJerseys = async (filters: JerseyFilters) => {
+const getFilteredJerseys = async (
+  filters: JerseyFilters,
+): Promise<Result<{ data: IProduct[]; pagination: IPagination }>> => {
   const page = Math.max(1, Number(filters.page) || 1);
   const minPriceInKobo =
     filters.minPrice != null && !isNaN(Number(filters.minPrice))
@@ -82,92 +89,129 @@ const getFilteredJerseys = async (filters: JerseyFilters) => {
 
   try {
     const { rows } = await pool.query(queryText, queryValues);
-    // Get out the total rows, using a guard clause and remember it is always a string
     const total = rows.length > 0 ? Number(rows[0].total_count) : 0;
-
-    // sanitize data to not include total count of rows
     const data = rows.map(({ total_count, ...rest }) => rest);
 
     return {
       success: true,
-      data,
-      pagination: {
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
+      data: {
+        data,
+        pagination: {
+          limit,
+          total,
+          totalPages: Math.ceil(total / limit),
+        },
       },
     };
   } catch (error) {
-    console.error("Database query failed:", error);
-    return { success: false, error: "Failed to fetch jerseys" };
+    return handleActionError(error, "getFilteredJerseys");
   }
 };
 
-const getProductDetails = async (productId: string) => {
-  const response = await db.query.products.findFirst({
-    where: and(eq(products.id, productId), eq(products.isActive, true)),
-    with: {
-      images: {
-        orderBy: asc(productImages.order),
-      },
-    },
-  });
+const getProductDetails = async (
+  productId: string,
+): Promise<Result<IProductDetails>> => {
+  try {
+    if (!productId || typeof productId !== "string") {
+      throw new AppError("VALIDATION_ERROR", "Invalid product id");
+    }
 
-  return response;
+    const res = await db.query.products.findFirst({
+      where: and(eq(products.id, productId), eq(products.isActive, true)),
+      with: { images: { orderBy: asc(productImages.order) } },
+    });
+
+    if (!res) {
+      throw new AppError("NOT_FOUND", "Jersey not found");
+    }
+
+    return { success: true, data: res };
+  } catch (error) {
+    return handleActionError(error, "getProductDetails");
+  }
 };
 
-const addProductToWishlists = async (productId: string) => {
-  const userId = await getSessionUserId();
+const addProductToWishlists = async (
+  productId: string,
+): Promise<Result<void>> => {
+  const sessionRes = await getSessionUserId();
 
-  await db
-    .insert(wishlistItems)
-    .values({ userId, productId })
-    .onConflictDoNothing();
+  if (!sessionRes.success) return sessionRes;
+
+  try {
+    await db
+      .insert(wishlistItems)
+      .values({ userId: sessionRes.data, productId })
+      .onConflictDoNothing();
+
+    return { success: true, data: undefined };
+  } catch (error) {
+    return handleActionError(error, "addProductToWishlists");
+  }
 };
 
-const removeProductFromWishlists = async (productId: string) => {
-  const userId = await getSessionUserId();
+const removeProductFromWishlists = async (
+  productId: string,
+): Promise<Result<void>> => {
+  const sessionRes = await getSessionUserId();
 
-  await db
-    .delete(wishlistItems)
-    .where(
-      and(
-        eq(wishlistItems.userId, userId),
-        eq(wishlistItems.productId, productId),
-      ),
-    );
+  if (!sessionRes.success) return sessionRes;
+
+  try {
+    await db
+      .delete(wishlistItems)
+      .where(
+        and(
+          eq(wishlistItems.userId, sessionRes.data),
+          eq(wishlistItems.productId, productId),
+        ),
+      );
+    return { success: true, data: undefined };
+  } catch (error) {
+    return handleActionError(error, "removeProductFromWishlists");
+  }
 };
 
-const getWishlistIds = async (userId: string) => {
-  const rows = await db
-    .select({ productId: wishlistItems.productId })
-    .from(wishlistItems)
-    .where(eq(wishlistItems.userId, userId));
+const getWishlistIds = async (userId: string): Promise<Result<string[]>> => {
+  try {
+    const rows = await db
+      .select({ productId: wishlistItems.productId })
+      .from(wishlistItems)
+      .where(eq(wishlistItems.userId, userId));
 
-  return rows.map((row) => row.productId);
+    return { success: true, data: rows.map((row) => row.productId) };
+  } catch (error) {
+    return handleActionError(error, "getWishlistIds");
+  }
 };
 
-const getWishlistedProducts = async (userId: string) => {
-  const rows = await db
-    .select({
-      id: products.id,
-      name: products.name,
-      league: products.league,
-      season: products.season,
-      priceInKobo: products.priceInKobo,
-      stock: products.stock,
-      createdAt: products.createdAt,
-      images: sql<
-        string[]
-      >`array_agg(${productImages.url} ORDER BY ${productImages.order} ASC)`,
-    })
-    .from(wishlistItems)
-    .innerJoin(products, eq(wishlistItems.productId, products.id))
-    .leftJoin(productImages, eq(products.id, productImages.productId))
-    .where(eq(wishlistItems.userId, userId))
-    .groupBy(products.id);
+const getWishlistedProducts = async (
+  userId: string,
+): Promise<Result<IProduct[]>> => {
+  try {
+    const rows = await db
+      .select({
+        id: products.id,
+        name: products.name,
+        league: products.league,
+        season: products.season,
+        priceInKobo: products.priceInKobo,
+        stock: products.stock,
+        createdAt: products.createdAt,
+        images: sql<
+          string[]
+        >`array_agg(${productImages.url} ORDER BY ${productImages.order} ASC)`,
+      })
+      .from(wishlistItems)
+      .innerJoin(products, eq(wishlistItems.productId, products.id))
+      .leftJoin(productImages, eq(products.id, productImages.productId))
+      .where(eq(wishlistItems.userId, userId))
+      .groupBy(products.id);
 
-  return rows;
+    return { success: true, data: rows };
+  } catch (error) {
+    return handleActionError(error, "getWishlistedProducts");
+  }
 };
 
 export {
