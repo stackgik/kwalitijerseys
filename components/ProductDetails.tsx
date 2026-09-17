@@ -23,7 +23,7 @@ export function ProductDetail({
   products,
 }: {
   productDetails: IProductDetails;
-  products: IProductData[];
+  products: IProduct[];
   currentProductId: string;
 }) {
   const router = useRouter();
