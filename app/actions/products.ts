@@ -90,7 +90,7 @@ const getFilteredJerseys = async (
   try {
     const { rows } = await pool.query(queryText, queryValues);
     const total = rows.length > 0 ? Number(rows[0].total_count) : 0;
-    const data = rows.map(({ total_count, ...rest }) => rest);
+    const data = rows.map(({ _total_count, ...rest }) => rest);
 
     return {
       success: true,
