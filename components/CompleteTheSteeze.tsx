@@ -6,13 +6,13 @@ import Image from "next/image";
 
 interface CompleteTheSteezeProps {
   currentProductId: string;
-  products: IProductData[];
+  products: IProduct[];
 }
 
-export function CompleteTheSteeze({
-  currentProductId,
-  products,
-}: CompleteTheSteezeProps) {
+// prettier-ignore
+const CompleteTheSteeze = ({ currentProductId, products }: CompleteTheSteezeProps) => {
+  console.log(products);
+  
   const carouselRef = useRef<HTMLDivElement>(null);
 
   // Filter out the current item, and cap the total recommendation pool at exactly 20 items
@@ -79,7 +79,7 @@ export function CompleteTheSteeze({
                 {product.name}
               </h4>
               <p className="text-sm font-black text-zinc-950 tabular-nums">
-                {formatCurrency(product.priceInKobo)}
+                {formatCurrency(product.priceInKobo!)}
               </p>
             </div>
           </Link>
@@ -88,3 +88,5 @@ export function CompleteTheSteeze({
     </div>
   );
 }
+
+export { CompleteTheSteeze };
