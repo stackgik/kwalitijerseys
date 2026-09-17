@@ -9,7 +9,8 @@ export type ErrorCode =
   | "NOT_FOUND"
   | "UNAUTHENTICATED"
   | "PAYMENT_FAILED"
-  | "INTERNAL_ERROR";
+  | "INTERNAL_ERROR"
+  | "VALIDATION_ERROR";
 
 //   Create a designated Error that carries my signature
 export class AppError extends Error {
