@@ -5,7 +5,7 @@ import Link from "next/link";
 import ProductCard from "./ProductCard";
 import { useWishlist } from "@/context/WishlistContext";
 
-const Wishlist = ({ products }: { products: IProductProps[] }) => {
+const Wishlist = ({ products }: { products: IProduct[] }) => {
   const { wishlisted } = useWishlist();
 
   const visibleProducts = products.filter((product) =>
