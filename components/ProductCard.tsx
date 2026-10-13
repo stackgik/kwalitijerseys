@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import WishlistBtn from "./WishlistBtn";
 
-const ProductCard = ({ product }: { product: IProductProps }) => {
+const ProductCard = ({ product }: { product: IProduct }) => {
   const { id, images, name, season, priceInKobo, stock, createdAt } =
     product || {};
 
@@ -68,7 +68,7 @@ const ProductCard = ({ product }: { product: IProductProps }) => {
           </h3>
           <div className="flex items-center justify-between pt-0.5">
             <p className="text-xs sm:text-sm font-black text-gray-900 tabular-nums">
-              {formatCurrency(priceInKobo / 100, "NGN")}
+              {formatCurrency(priceInKobo! / 100, "NGN")}
             </p>
           </div>
         </div>
