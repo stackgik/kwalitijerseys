@@ -27,13 +27,9 @@ type WishlistProviderProps = {
 
 const WishlistContext = createContext<WishlistContextValue | null>(null);
 
-export function WishlistProvider({
-  children,
-  initialWishlistIds,
-}: WishlistProviderProps) {
-  const [wishlisted, setWishlisted] = useState<Set<string>>(
-    () => new Set(initialWishlistIds),
-  );
+//prettier-ignore
+export function WishlistProvider({ children, initialWishlistIds }: WishlistProviderProps) {
+  const [wishlisted, setWishlisted] = useState<Set<string>>(() => new Set(initialWishlistIds));
   const [pendingId, setPendingId] = useState<string | null>(null);
 
   const setInitialWishlist = useCallback(

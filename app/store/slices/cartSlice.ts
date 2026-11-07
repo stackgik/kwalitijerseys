@@ -1,21 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const LOCAL_STORAGE_KEY = "kwalitijerseys_global_cart";
-
-const initialState: ICartItem[] = (() => {
-  if (typeof window === "undefined") return [];
-
-  const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
-  if (saved) {
-    try {
-      return JSON.parse(saved);
-    } catch (error) {
-      console.log(error);
-      localStorage.removeItem(LOCAL_STORAGE_KEY);
-    }
-  }
-  return [];
-})();
+const initialState: ICartItem[] = [];
 
 type UpdateItemPayload = {
   itemId: string;
@@ -26,6 +11,10 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
+    hydrateCart(_, action: PayloadAction<ICartItem[]>) {
+      return action.payload;
+    },
+
     addItem(state, action: PayloadAction<ICartItem>) {
       const existingIndex = state.findIndex(
         (item) =>
@@ -57,11 +46,13 @@ const cartSlice = createSlice({
       );
     },
 
-    clearCart(state) {
-      return (state = []);
+    clearCart() {
+      return [];
     },
   },
   selectors: {
+    selectCartItems: (state) => state,
+
     selectCartItemsCount: (state) =>
       state.reduce((sum, curr) => sum + curr.quantity, 0),
 
@@ -76,4 +67,8 @@ const cartSlice = createSlice({
   },
 });
 
-export default cartSlice;
+export const { addItem, removeItem, updateItem, clearCart, hydrateCart } =
+  cartSlice.actions;
+export const { selectCartItemsCount, selectSubtotal, selectCartItems } =
+  cartSlice.selectors;
+export const cartReducer = cartSlice.reducer;

@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/context/CartEditContext";
 import Image from "next/image";
 import { AVAILABLE_JERSEY_SIZES, VERSION_UPCHARGE_KOBO } from "@/constant";
 import { Plus, Minus } from "lucide-react";
 import SideSheet from "./SideSheet";
 import formatCurrency from "@/helper/formatCurrency";
+import { useAppDispatch } from "@/app/store/hooks";
+import { updateItem } from "@/app/store/slices/cartSlice";
 
 interface EditCartItemDialogProps {
   item: ICartItem | null;
@@ -18,7 +20,7 @@ interface IEditCartForm {
 }
 
 const EditCartForm = ({ item, closeSheet }: IEditCartForm) => {
-  const { updateItem } = useCart();
+  const dispatch = useAppDispatch();
 
   const [size, setSize] = useState(item.size || "");
   const [version, setVersion] = useState<"fan" | "player">(
@@ -64,7 +66,7 @@ const EditCartForm = ({ item, closeSheet }: IEditCartForm) => {
         : { customization: undefined }),
     };
 
-    updateItem(item.cartItemId, updatedItem);
+    dispatch(updateItem({ itemId: item.cartItemId, newItem: updatedItem }));
     closeSheet();
   };
 
@@ -263,9 +265,9 @@ const EditCartForm = ({ item, closeSheet }: IEditCartForm) => {
   );
 };
 
-// 2. The structural wrapper passes down an item specific key string
-// prettier-ignore
-export function EditCartItemSheet({ item: editingItem }: EditCartItemDialogProps) {
+export function EditCartItemSheet({
+  item: editingItem,
+}: EditCartItemDialogProps) {
   const { setEditingItem, editingItem: contextEditingItem } = useCart();
   const item = editingItem || contextEditingItem;
 

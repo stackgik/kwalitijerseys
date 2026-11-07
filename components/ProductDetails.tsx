@@ -8,7 +8,6 @@ import {
   JERSEY_FEATURES,
   VERSION_UPCHARGE_KOBO,
 } from "@/constant";
-import { useCart } from "@/context/CartContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -17,6 +16,8 @@ import SizeGuideSheet from "./SizeGuideSheet";
 import formatCurrency from "@/helper/formatCurrency";
 import { ProductCareAndShipping } from "./ProductCareAndShipping";
 import { CompleteTheSteeze } from "./CompleteTheSteeze";
+import { useAppDispatch } from "@/app/store/hooks";
+import { addItem } from "@/app/store/slices/cartSlice";
 
 export function ProductDetail({
   productDetails,
@@ -27,7 +28,8 @@ export function ProductDetail({
   currentProductId: string;
 }) {
   const router = useRouter();
-  const { addItem } = useCart();
+  // const { addItem } = useCart();
+  const dispatch = useAppDispatch();
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedVersion, setSelectedVersion] = useState<"fan" | "player">(
     "fan",
@@ -84,7 +86,8 @@ export function ProductDetail({
       return;
     }
     const newCartItem = compileLineItem();
-    addItem(newCartItem);
+    // addItem(newCartItem);
+    dispatch(addItem(newCartItem));
     toast.success(productDetails.name + " has been added to basket");
   };
 
