@@ -1,28 +1,25 @@
 "use client";
 
-import {
-  ShoppingBag,
-  ArrowLeft,
-  Edit2,
-  Trash2,
-  ArrowRight,
-} from "lucide-react";
-import { useCart } from "@/context/CartContext";
+import { ShoppingBag, ArrowLeft, Trash2, ArrowRight } from "lucide-react";
+import { useCart } from "@/context/CartEditContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { EditCartItemSheet } from "./EditCartItemSheet";
+import CartItem from "./CartItem";
+import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
+import {
+  clearCart,
+  selectCartItems,
+  selectSubtotal,
+} from "@/app/store/slices/cartSlice";
 
 export function Cart() {
   const router = useRouter();
-  const {
-    cartItems,
-    subtotal,
-    editingItem,
-    setEditingItem,
-    removeItem,
-    clearCart,
-  } = useCart();
+  const dispatch = useAppDispatch();
+
+  const { editingItem } = useCart();
+  const cartItems = useAppSelector(selectCartItems);
+  const subtotal = useAppSelector(selectSubtotal);
 
   if (cartItems.length === 0) {
     return (
@@ -77,7 +74,7 @@ export function Cart() {
                   </h2>
                   {cartItems.length > 0 && (
                     <button
-                      onClick={clearCart}
+                      onClick={() => dispatch(clearCart())}
                       className="text-xs font-semibold text-gray-500 hover:text-red-600 transition-colors flex items-center gap-1 cursor-pointer"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -85,77 +82,10 @@ export function Cart() {
                     </button>
                   )}
                 </div>
+
                 <div className="divide-y divide-gray-100 px-5">
                   {cartItems.map((item, index) => (
-                    <div
-                      key={`${item.cartItemId}-${index}`}
-                      className="py-5 flex gap-4 group"
-                    >
-                      <div className="relative w-16 h-20 bg-gray-50 rounded-xl overflow-hidden border border-gray-100/60 shrink-0">
-                        <Image
-                          src={item.image}
-                          alt={item.name}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                      <div className="flex-1 min-w-0 flex flex-col justify-between">
-                        <div>
-                          <div className="flex items-start justify-between gap-2">
-                            <h3 className="font-semibold text-xs sm:text-sm text-gray-900 truncate">
-                              {item.name}
-                            </h3>
-                            <p className="text-xs sm:text-sm font-black text-gray-900 tabular-nums">
-                              ₦
-                              {(
-                                (item.priceInKobo / 100 +
-                                  (item.customization?.price || 0)) *
-                                item.quantity
-                              ).toLocaleString()}
-                            </p>
-                          </div>
-                          <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1 text-[11px] font-medium text-gray-500">
-                            <span>
-                              Size: <b className="text-gray-800">{item.size}</b>
-                            </span>
-                            <span>
-                              Style:{" "}
-                              <b className="text-gray-800 capitalize">
-                                {item.type === "retro"
-                                  ? item.type
-                                  : `${item.version} Version`}
-                              </b>
-                            </span>
-                            <span>
-                              Qty:{" "}
-                              <b className="text-gray-800">{item.quantity}</b>
-                            </span>
-                          </div>
-                          {item.customization && (
-                            <div className="mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-gray-50 border border-gray-100 text-[10px] text-gray-600 font-medium">
-                              Print: {item.customization.name || "No Name"} • #
-                              {item.customization.number || "00"}
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="flex items-center gap-3 mt-2 pt-2 border-t border-dashed border-gray-100">
-                          <button
-                            onClick={() => setEditingItem(item)}
-                            className="text-[11px] font-bold text-gray-400 hover:text-black flex items-center gap-1 transition-colors"
-                          >
-                            <Edit2 className="w-3 h-3" /> Configure Style
-                          </button>
-                          <span className="text-gray-200 text-xs">|</span>
-                          <button
-                            onClick={() => removeItem(item.cartItemId)}
-                            className="text-[11px] font-bold text-gray-400 hover:text-red-600 flex items-center gap-1 transition-colors"
-                          >
-                            <Trash2 className="w-3 h-3" /> Remove
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                    <CartItem item={item} key={`${item.cartItemId}-${index}`} />
                   ))}
                 </div>
               </div>

@@ -16,12 +16,12 @@ import {
   Power,
   ChevronDown,
 } from "lucide-react";
-import { useCart } from "@/context/CartContext";
 import Image from "next/image";
 import { authClient } from "@/lib/auth-client";
 import { useAuthModal } from "@/context/AuthModalContext";
 import { useWishlist } from "@/context/WishlistContext";
-// import { useAuthModal } from "@/components/AuthModalContext";
+import { useAppSelector } from "@/app/store/hooks";
+import { selectCartItemsCount } from "@/app/store/slices/cartSlice";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -33,7 +33,9 @@ export function Header() {
   const { setIsModalOpen } = useAuthModal();
 
   const pathname = usePathname();
-  const { itemCount } = useCart();
+
+  const itemCount = useAppSelector(selectCartItemsCount);
+
   const user = data?.user
     ? {
         name: data.user.name,

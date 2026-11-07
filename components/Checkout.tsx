@@ -8,7 +8,6 @@ import {
   MINIMUM_DELIVERY_FEE,
   NIGERIAN_STATES,
 } from "@/constant";
-import { useCart } from "@/context/CartContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
@@ -30,10 +29,19 @@ import {
 } from "./ui/select";
 import formatCurrency from "@/helper/formatCurrency";
 import { checkoutOrderAction } from "@/app/actions/orders";
+import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
+import {
+  clearCart,
+  selectCartItems,
+  selectSubtotal,
+} from "@/app/store/slices/cartSlice";
 
 const Checkout = () => {
+  const dispatch = useAppDispatch();
   const router = useRouter();
-  const { cartItems, subtotal: globalCartSubtotal, clearCart } = useCart();
+
+  const cartItems = useAppSelector(selectCartItems);
+  const globalCartSubtotal = useAppSelector(selectSubtotal);
   const [selectedState, setSelectedState] = useState<string | undefined>();
   const [isProcessing, setIsProcessing] = useState(false);
   const searchParams = useSearchParams();
@@ -158,7 +166,7 @@ const Checkout = () => {
           if (isExpressMode) {
             sessionStorage.removeItem("express_checkout_item");
           } else {
-            clearCart();
+            dispatch(clearCart());
           }
 
           router.push(`/checkout/success?reference=${response.reference}`);
