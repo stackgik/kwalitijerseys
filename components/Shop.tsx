@@ -31,8 +31,6 @@ export const Shop = ({
   const router = useRouter();
   const pathname = usePathname();
 
-  console.log(products);
-
   const [showFilters, setShowFilters] = useState(false);
 
   const { data: session } = authClient.useSession();
@@ -170,7 +168,7 @@ export const Shop = ({
               showFilters
                 ? "fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex justify-end"
                 : "hidden"
-            } lg:block lg:sticky lg:top-24 lg:z-10 lg:w-60 shrink-0 self-start max-h-[calc(100vh-7rem)] overflow-y-auto pr-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden`}
+            } lg:block lg:sticky lg:top-24 lg:z-10 lg:w-60 shrink-0 self-start max-h-[calc(100vh-7rem)] overflow-y-auto pr-1 [scrollbar:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden`}
             onClick={(e) => {
               if (e.target === e.currentTarget) setShowFilters(false);
             }}
@@ -195,7 +193,7 @@ export const Shop = ({
                   <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">
                     Featured Teams
                   </h3>
-                  <div className="space-y-1 max-h-52 overflow-y-auto pr-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                  <div className="space-y-1 max-h-52 overflow-y-auto pr-1 [scrollbar:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                     {[
                       "All",
                       "Arsenal",
