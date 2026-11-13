@@ -1,44 +1,54 @@
+import { sql } from "drizzle-orm";
 import { productDetails } from "@/constant";
-import { db } from "../db";
+import { db, pool } from "../db";
 import { productImages, products } from "../db/schema";
 
 const seedProduct = async () => {
-  try {
-    // Run a transaction that stays alive until all insert is done.
-    await db.transaction(async (tx) => {
-      // Loop through the data array
-      for (let i = 0; i < productDetails.length; i++) {
-        const { images, ...productField } = productDetails[i];
+  // Guard: don't seed twice
+  const [{ total }] = await db
+    .select({ total: sql<number>`count(*)::int` })
+    .from(products);
 
-        const [inserted] = await tx
-          .insert(products)
-          .values({
-            name: productField.name,
-            description: productField.description,
-            team: productField.team,
-            league: productField.league,
-            season: productField.season,
-            priceInKobo: productField.priceInKobo,
-            stock: productField.stock,
-            isActive: productField.isActive,
-            type: productField.type,
-          })
-          .returning();
+  if (total > 0) {
+    console.log(`Products table already has ${total} rows. Skipping.`);
+    return;
+  }
 
-        if (inserted) {
-          const imageRows = images.map((url, index) => ({
+  await db.transaction(async (tx) => {
+    for (const { images, ...productField } of productDetails) {
+      const [inserted] = await tx
+        .insert(products)
+        .values({
+          name: productField.name,
+          description: productField.description,
+          team: productField.team,
+          league: productField.league,
+          season: productField.season,
+          priceInKobo: productField.priceInKobo,
+          stock: productField.stock,
+          isActive: productField.isActive,
+          type: productField.type,
+        })
+        .returning();
+
+      if (inserted) {
+        await tx.insert(productImages).values(
+          images.map((url, index) => ({
             productId: inserted.id,
             url,
             order: index,
-          }));
-
-          await tx.insert(productImages).values(imageRows);
-        }
+          })),
+        );
       }
-    });
-  } catch (err) {
-    console.error("❌ Seeding loop failure:", err);
-  }
+    }
+  });
+
+  console.log(`✅ Seeded ${productDetails.length} products`);
 };
 
-seedProduct();
+seedProduct()
+  .catch((err) => {
+    console.error("❌ Seeding failed:", err);
+    process.exitCode = 1;
+  })
+  .finally(() => pool.end());

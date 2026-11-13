@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "db:seed": "tsx --env-file=.env.local app/db/seed.ts",
+    "db:seed": "tsx app/db/seed.ts",
     "db:push": "dotenv -e .env.local -- drizzle-kit push",
     "db:push:staging": "dotenv -e .env.staging -- drizzle-kit push",
     "db:push:prod": "dotenv -e .env.production -- drizzle-kit push",
