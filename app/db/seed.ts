@@ -4,7 +4,6 @@ import { db, pool } from "../db";
 import { productImages, products } from "../db/schema";
 
 const seedProduct = async () => {
-  // Guard: don't seed twice
   const [{ total }] = await db
     .select({ total: sql<number>`count(*)::int` })
     .from(products);
