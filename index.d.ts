@@ -64,6 +64,7 @@ declare global {
     productId: string; // Tracks the physical product from your database
     name: string;
     priceInKobo: number;
+    pristineBasePrice: number;
     image: string;
     size: string;
     quantity: number;

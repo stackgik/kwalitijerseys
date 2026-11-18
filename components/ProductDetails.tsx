@@ -64,6 +64,7 @@ export function ProductDetail({
     cartItemId: crypto.randomUUID(),
     productId: productDetails.id,
     name: productDetails.name,
+    pristineBasePrice: productDetails.priceInKobo,
     priceInKobo: getVersionPrice() * 100,
     size: selectedSize,
     type: productDetails.type as "current" | "modern" | "retro",

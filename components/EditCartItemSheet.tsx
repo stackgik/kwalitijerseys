@@ -41,20 +41,23 @@ const EditCartForm = ({ item, closeSheet }: IEditCartForm) => {
     return customNumber.trim().length >= 3 ? 6000 : 5000;
   };
 
-  const pristinePriceInKobo = item.priceInKobo;
+  const basePrice = item.pristineBasePrice;
+
+  // base
+  // price
 
   const handleSave = () => {
-    const basePrice =
+    const price =
       version === "fan"
-        ? pristinePriceInKobo
-        : pristinePriceInKobo + VERSION_UPCHARGE_KOBO;
+        ? basePrice
+        : basePrice + VERSION_UPCHARGE_KOBO;
 
     const updatedItem: ICartItem = {
       ...item,
       size,
       version,
       quantity,
-      priceInKobo: item.type === "retro" ? item.priceInKobo : basePrice,
+      priceInKobo: item.type === "retro" ? item.priceInKobo : price,
       ...(customizationEnabled && (customName.trim() || customNumber.trim())
         ? {
             customization: {
