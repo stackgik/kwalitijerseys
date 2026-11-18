@@ -13,6 +13,7 @@ import { getWishlistIds } from "./actions/products";
 import StoreProvider from "./store/StoreProvider";
 
 import * as Sentry from "@sentry/nextjs";
+import BodyScrollLock from "@/components/BodyScrollLock";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -59,7 +60,7 @@ const RootLayout = async ({ children }: Readonly<{ children: React.ReactNode }>)
   }
 
   return (
-    <html lang="en" className="overflow-y-scroll scroll-smooth overscroll-none">
+    <html lang="en" className="overflow-y-scroll scroll-smooth overscroll-none scrollbar-gutter-stable">
       <body
         className={`${nunito.className} font-sans antialiased bg-white text-black min-h-screen flex flex-col selection:bg-black selection:text-white overscroll-none`}
       >
@@ -67,6 +68,7 @@ const RootLayout = async ({ children }: Readonly<{ children: React.ReactNode }>)
           <AuthModalProvider>
             <CartProvider>
               <WishlistProvider initialWishlistIds={wishlistIds}>
+                <BodyScrollLock />
                 <main className="flex-1 grow">{children}</main>
                 <Toaster position="top-center" />
                 <AuthProxyModal />

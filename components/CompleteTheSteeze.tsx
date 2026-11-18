@@ -11,8 +11,6 @@ interface CompleteTheSteezeProps {
 
 // prettier-ignore
 const CompleteTheSteeze = ({ currentProductId, products }: CompleteTheSteezeProps) => {
-  console.log(products);
-  
   const carouselRef = useRef<HTMLDivElement>(null);
 
   // Filter out the current item, and cap the total recommendation pool at exactly 20 items
