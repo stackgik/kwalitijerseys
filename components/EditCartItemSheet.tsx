@@ -43,9 +43,6 @@ const EditCartForm = ({ item, closeSheet }: IEditCartForm) => {
 
   const basePrice = item.pristineBasePrice;
 
-  // base
-  // price
-
   const handleSave = () => {
     const price =
       version === "fan"
