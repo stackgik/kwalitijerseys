@@ -70,55 +70,15 @@ const checkoutOrderAction = async (orderPayload: unknown) => {
             );
         });
     } catch (ex) {
-        Sentry.captureException(ex);
+        Sentry.captureException(ex, {tags: {where: "checkoutOrderAction"}});
         return {success: false, error: "Something went wrong. Please try again."};
     }
 
     return {success: true, reference, total};
 };
 
-const markOrderPaid = async (
-    reference: string,
-    amountInKobo: number,
-    status: string,
-) => {
-    if (status !== "success") return;
 
-    const order = await db.query.orders.findFirst({
-        where: eq(orders.reference, reference),
-    });
-
-    if (!order || order.paymentStatus === "paid") return;
-
-    if (order.total !== amountInKobo) {
-        await db
-            .update(orders)
-            .set({paymentStatus: "fraud_audit_flagged"})
-            .where(eq(orders.reference, reference));
-        return;
-    }
-
-    await db
-        .update(orders)
-        .set({paymentStatus: "paid"})
-        .where(eq(orders.reference, reference));
-};
-
-const markOrderFailed = async (reference: string) => {
-    const order = await db.query.orders.findFirst({
-        where: eq(orders.reference, reference),
-    });
-
-    // Order doesn't exist or was already resolved — do nothing
-    if (!order || order.paymentStatus !== "pending") return;
-
-    await db
-        .update(orders)
-        .set({paymentStatus: "failed"})
-        .where(eq(orders.reference, reference));
-};
-
-const verifyPaystackPayment = async (reference: string): Promise<boolean> => {
+const verifyPaystackPayment = async (reference: string): Promise<VerifyResult> => {
     try {
         // 1. Double check our DB first. If it's already marked paid by a webhook, skip the API call!
         const existingOrder = await db.query.orders.findFirst({
