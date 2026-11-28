@@ -1,6 +1,8 @@
 "use client";
 
 import {useState} from "react";
+import * as Sentry from "@sentry/nextjs";
+
 import {ArrowLeft, ShieldCheck, Loader2, Lock} from "lucide-react";
 import {toast} from "sonner";
 import {
@@ -29,15 +31,13 @@ import {
 } from "./ui/select";
 import formatCurrency from "@/helper/formatCurrency";
 import {checkoutOrderAction} from "@/app/actions/orders";
-import {useAppDispatch, useAppSelector} from "@/app/store/hooks";
+import {useAppSelector} from "@/app/store/hooks";
 import {
-    clearCart,
     selectCartItems,
     selectSubtotal,
 } from "@/app/store/slices/cartSlice";
 
 const Checkout = () => {
-    const dispatch = useAppDispatch();
     const router = useRouter();
 
     const cartItems = useAppSelector(selectCartItems);
@@ -110,7 +110,6 @@ const Checkout = () => {
             </div>
         );
     }
-
     // 2. Paystack Inline Checkout Core Trigger
     const handlePaystackPayment = async (formData: DeliveryDetailsSchemaType) => {
         setIsProcessing(true);
@@ -126,7 +125,6 @@ const Checkout = () => {
                 items: lineItems,
                 orderNotes: formData.deliveryNotes,
             }
-            console.log(payload)
             const result = await checkoutOrderAction(payload);
 
             if (!result?.success || !result?.reference) {
@@ -142,32 +140,11 @@ const Checkout = () => {
             paystack.newTransaction({
                 key: PAYSTACK_PUBLIC_KEY as string,
                 email: formData.email,
-                amount: totalInKobo,
+                amount: result.total,
                 currency: "NGN",
                 reference: result.reference,
 
-                metadata: {
-                    custom_fields: [
-                        {
-                            display_name: "Customer Name",
-                            variable_name: "customer_name",
-                            value: formData.fullName,
-                        },
-                        {
-                            display_name: "Phone Number",
-                            variable_name: "phone_number",
-                            value: formData.phoneNumber,
-                        },
-                    ],
-                },
-
                 onSuccess: (response) => {
-                    if (isExpressMode) {
-                        sessionStorage.removeItem("express_checkout_item");
-                    } else {
-                        dispatch(clearCart());
-                        console.log("Worked!")
-                    }
                     router.push(`/checkout/success?reference=${response.reference}`);
                 },
 
@@ -176,8 +153,8 @@ const Checkout = () => {
                     setIsProcessing(false);
                 },
             });
-        } catch (error) {
-            console.error("Payment window boot error:", error);
+        } catch (ex) {
+            Sentry.captureException(ex, {tags: {where: "handlePaystackPayment"}});
             toast.error("An operational checkout fault occurred.");
             setIsProcessing(false);
         }
@@ -488,7 +465,7 @@ const Checkout = () => {
                                 ) : (
                                     <>
                                         <Lock className="w-4 h-4"/>
-                                        <span>Pay Sacurely via Paystack</span>
+                                        <span>Pay Securely via Paystack</span>
                                     </>
                                 )}
                             </button>
