@@ -1,6 +1,5 @@
 "use server";
 import {nanoid} from "nanoid"
-import {z} from "zod"
 import * as Sentry from "@sentry/nextjs";
 
 import {db} from "../db";
@@ -8,6 +7,9 @@ import {orderItems, orders, products} from "../db/schema";
 import {eq, inArray} from "drizzle-orm";
 import checkoutSchema from "@/zod/checkout.schema";
 import {DELIVERY_FEES, PRINT_FEE_KOBO, VERSION_UPCHARGE_KOBO} from "@/constant";
+import axios from "axios";
+
+export type VerifyResult = { status: "paid" } | { status: "not_paid" } | { status: "error" };
 
 const checkoutOrderAction = async (orderPayload: unknown) => {
     const parsed = checkoutSchema.safeParse(orderPayload);
@@ -86,48 +88,42 @@ const verifyPaystackPayment = async (reference: string): Promise<VerifyResult> =
         });
 
         if (existingOrder && existingOrder.paymentStatus === "paid") {
-            return true;
+            return {status: "paid"};
         }
 
         // 2. If not marked paid yet, talk directly to Paystack's official verification engine
-        const response = await fetch(
-            `https://api.paystack.co/transaction/verify/${reference}`,
+        const {data} = await axios.get(
+            `https://api.paystack.co/transaction/verify/${encodeURIComponent(reference)}`,
             {
-                method: "GET",
                 headers: {
                     Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
                     "Content-Type": "application/json",
+                    "Cache-Control": "no-store",
+                    Pragma: "no-cache",
                 },
-                // Keep it fresh, don't cache verification results
-                cache: "no-store",
-            },
+            }
         );
-
-        const data = await response.json();
 
         // 3. Confirm Paystack explicitly says the transaction is successful
         if (data.status === true && data.data.status === "success") {
             if (existingOrder && existingOrder.total === data.data.amount) {
-                // Update order status to paid in your database
                 await db
                     .update(orders)
                     .set({paymentStatus: "paid", updatedAt: new Date()})
                     .where(eq(orders.reference, reference));
 
-                return true;
+                return {status: "paid"};
             }
         }
 
-        return false;
-    } catch (error) {
-        console.error("Paystack verification server error:", error);
-        return false;
+        return {status: "not_paid"};
+    } catch (ex) {
+        Sentry.captureException(ex, {tags: {where: "verifyPaystackPayment"}, extra: {reference}});
+        return {status: "error"};
     }
 };
 
 export {
     checkoutOrderAction,
-    markOrderPaid,
-    markOrderFailed,
     verifyPaystackPayment,
 };
